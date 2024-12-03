@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Web_Odev.Models.Salon>
+
+<h1>Salonlar</h1>
+<table>
+    <thead>
+        <tr>
+            <th>İsim</th>
+            <th>Çalışma Saatleri</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var salon in Model)
+        {
+            <tr>
+                <td>@salon.Isim</td>
+                <td>@salon.CalismaSaatleri</td>
+            </tr>
+        }
+    </tbody>
+</table>

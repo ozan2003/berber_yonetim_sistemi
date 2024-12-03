@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Web_Odev.Models.Randevu>
+
+<h1>Randevular</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Tarih ve Saat</th>
+            <th>Çalışan</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var randevu in Model)
+        {
+            <tr>
+                <td>@randevu.TarihSaat</td>
+                <td>@randevu.Calisan.Isim</td>
+                <td>@randevu.Islem.Ad</td>
+            </tr>
+        }
+    </tbody>
+</table>

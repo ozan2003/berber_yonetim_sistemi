@@ -21,6 +21,10 @@ public class HomeController : Controller
     {
         return View();
     }
+    public IActionResult Randevu()
+    {
+        return RedirectToAction("Al", "Randevu");
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
