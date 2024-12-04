@@ -1,4 +1,6 @@
-﻿namespace Web_Odev.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Web_Odev.Models
 {
     public class Kullanici
     {

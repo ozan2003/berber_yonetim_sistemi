@@ -1,8 +1,14 @@
-﻿namespace Web_Odev.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Web_Odev.Models
 {
     public class Randevu
     {
+        [Key]
         public int ID { get; set; }
+
+        [Required]
+        [Display(Name = "Tarih ve Saat")]
         public DateTime TarihSaat { get; set; }
         //public int IslemID { get; set; }
 

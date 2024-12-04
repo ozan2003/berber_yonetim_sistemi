@@ -1,4 +1,6 @@
-﻿namespace Web_Odev.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Web_Odev.Models
 {
     public class Islem
     {
@@ -8,13 +10,13 @@
         [Required]
         [MaxLength(100)]
         [Display(Name = "İşlem Adı")]
-        public string Ad { get; set; }
+        public string Ad { get; set; } = "İşlem";
 
         [Display(Name = "Süre (dakika)")]
         public int Sure { get; set; } // Süre (dakika cinsinden)
 
         [Display(Name = "Ücret")]
-        public decimal Ucret { get; set; } // Ücret (örneğin: 100.50)
+        public decimal? Ucret { get; set; } // Ücret (örneğin: 100.50)
     }
 
 }

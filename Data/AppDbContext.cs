@@ -20,11 +20,11 @@ namespace Web_Odev.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Salon>().HasData(
-                new Salon { ID = 1, Isim = "Örnek Salon", CalismaSaatleri = " 09:00 - 18:00" }
+                new Salon {ID = 1}
             );
 
             modelBuilder.Entity<Islem>().HasData(
-                new Islem { ID = 1, Ad = "Saç Kesimi", Sure = 30, Ucret = 50 }
+                new Islem {ID = 1}
             );
         }
 
