@@ -10,10 +10,13 @@ namespace Web_Odev.Models
         [Required]
         [MaxLength(100)]
         [Display(Name = "Kullanıcı İsmi")]
-        public string Isim { get; set; }
+        public string? Isim { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public string Şifre { get; set; }
+        public string? Şifre { get; set; }
+
+        public string? Email { get; set; }
+        public string Rol { get; set; } = "User"; // Varsayılan rol
     }
 }

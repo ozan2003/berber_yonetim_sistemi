@@ -1,0 +1,49 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Girişi</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <h2 class="text-center mb-4">Admin Girişi</h2>
+            <form asp-action="Login" method="post">
+                <div class="form-group mb-3">
+                    <label for="username" class="form-label">Kullanıcı Adı</label>
+                    <input type="email" name="username" class="form-control" required
+                           placeholder="Ogrenci Nuramarasi Giriniz" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password" class="form-label">Şifre</label>
+                    <input type="password" name="password" class="form-control" required
+                           placeholder="Şifrenizi girin" />
+                </div>
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    </div>
+                }
+                <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
