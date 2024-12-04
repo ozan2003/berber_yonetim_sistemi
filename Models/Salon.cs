@@ -2,9 +2,14 @@
 {
     public class Salon
     {
-        public int? ID { get; set; } // Birincil anahtar
-        public int? SalonID { get; set; }
-        public string? Isim { get; set; }
+        [Key]
+        public int ID { get; set; } // Birincil anahtar
+        //public int? SalonID { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        [Display(Name = "Salon İsmi")]
+        public string Isim { get; set; }
 
         public string? CalismaSaatleri { get; set; } // Birincil anahtar
     }

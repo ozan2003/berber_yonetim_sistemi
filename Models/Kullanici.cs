@@ -2,7 +2,16 @@
 {
     public class Kullanici
     {
-        public int? ID { get; set; } // Birincil anahtar
-        public string? Isim { get; set; }
+        [Key]
+        public int ID { get; set; } // Birincil anahtar
+
+        [Required]
+        [MaxLength(100)]
+        [Display(Name = "Kullanıcı İsmi")]
+        public string Isim { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string Şifre { get; set; }
     }
 }
