@@ -9,7 +9,7 @@
     </div>
     <div>
         <label>İşlem:</label>
-        <select asp-for="IslemID" class="form-control">
+        <select asp-for="Islem.ID" class="form-control">
             <option value="">-- İşlem Seçin --</option>
             @foreach (var islem in ViewBag.Islemler)
             {
@@ -19,7 +19,7 @@
     </div>
     <div>
         <label>Çalışan:</label>
-        <select asp-for="CalisanID" class="form-control">
+        <select asp-for="Calisan.ID" class="form-control">
             <option value="">-- Çalışan Seçin --</option>
             @foreach (var calisan in ViewBag.Calisanlar)
             {
@@ -29,7 +29,7 @@
     </div>
     <div>
         <label>Kullanıcı:</label>
-        <select asp-for="KullaniciID" class="form-control">
+        <select asp-for="Kullanici.ID" class="form-control">
             <option value="">-- Kullanıcı Seçin --</option>
             @foreach (var kullanici in ViewBag.Kullanicilar)
             {
