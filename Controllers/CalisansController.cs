@@ -43,11 +43,17 @@ namespace Web_Odev.Controllers
             return View(calisan);
         }
 
+        public IActionResult CalisanList()
+        {
+            return View(_context.Calisanlar.ToList());
+        }
+
         // GET: Calisans/Create
         public IActionResult Create()
         {
             return View();
         }
+
 
         // POST: Calisans/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
