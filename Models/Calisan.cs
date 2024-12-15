@@ -12,11 +12,15 @@ namespace Web_Odev.Models
         [MaxLength(100)]
         [Display(Name = "Çalışan İsmi")]
         public string? Isim { get; set; }
-        //public string? UzmanlikAlanlari { get; set; }
-        //public string? MusaitlikSaatleri { get; set; }
-        //public int? SalonID { get; set; }
-        public Salon? Salon { get; set; }
-        public List<Randevu>? Randevular { get; set; }
+
+        [Display(Name = "Uzmanlık Alanları")]
+        public string? UzmanlikAlanlari { get; set; } // Örn: Saç Kesimi, Boyama
+
+        [Display(Name = "Müsaitlik Saatleri")]
+        public string? MusaitlikSaatleri { get; set; } // Örn: 09:00-12:00, 13:00-17:00
+
+        public Salon? Salon { get; set; } // İlgili salon
+
+        public List<Randevu>? Randevular { get; set; } // Çalışanın randevuları
     }
 }
-

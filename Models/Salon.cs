@@ -12,6 +12,6 @@ namespace Web_Odev.Models
         [Display(Name = "Salon İsmi")]
         public string? Isim { get; set; }
 
-        //public string? CalismaSaatleri { get; set; } // Birincil anahtar
+        public string? CalismaSaatleri { get; set; } // Birincil anahtar
     }
 }

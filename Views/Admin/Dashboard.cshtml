@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Admin Paneli";
+}
+
+<div class="text-center">
+    <h1>Admin Paneli</h1>
+
+    <!-- Çalışanları Gör Butonu -->
+    <a href="/Calisans/Index" class="btn btn-primary">Çalışanları Gör</a>
+
+    <!-- Yeni Çalışan Ekle Butonu -->
+    <a href="/Calisans/Create" class="btn btn-success">Yeni Çalışan Ekle</a>
+
+    <!-- Randevuları Gör Butonu -->
+    <a href="/Randevus/Index" class="btn btn-info">Randevuları Gör</a>
+
+    <!-- Çıkış Yap Butonu -->
+    <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-dark">Çıkış Yap</button>
+    </form>
+</div>

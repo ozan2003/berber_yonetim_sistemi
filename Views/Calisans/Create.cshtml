@@ -1,33 +1,51 @@
 ﻿@model Web_Odev.Models.Calisan
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Yeni Çalışan Ekle";
 }
 
-<h1>Create</h1>
+<h1>Yeni Çalışan Ekle</h1>
 
-<h4>Calisan</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Çalışan İsmi -->
             <div class="form-group">
                 <label asp-for="Isim" class="control-label"></label>
                 <input asp-for="Isim" class="form-control" />
                 <span asp-validation-for="Isim" class="text-danger"></span>
             </div>
+
+            <!-- Uzmanlık Alanları -->
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="UzmanlikAlanlari" class="control-label"></label>
+                <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Örn: Saç Kesimi, Boyama" />
+                <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
+            </div>
+
+            <!-- Müsaitlik Saatleri -->
+            <div class="form-group">
+                <label asp-for="MusaitlikSaatleri" class="control-label"></label>
+                <input asp-for="MusaitlikSaatleri" class="form-control" placeholder="Örn: 09:00-12:00, 13:00-17:00" />
+                <span asp-validation-for="MusaitlikSaatleri" class="text-danger"></span>
+            </div>
+
+            <!-- Submit Butonu -->
+            <div class="form-group">
+                <input type="submit" value="Ekle" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Çalışan Listesine Dön</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

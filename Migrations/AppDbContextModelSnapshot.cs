@@ -31,7 +31,9 @@ namespace Web_Odev.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Isim")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MusaitlikSaatleri")
                         .HasColumnType("nvarchar(max)");
@@ -58,9 +60,11 @@ namespace Web_Odev.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Ad")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("Sure")
+                    b.Property<int>("Sure")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Ucret")
@@ -74,9 +78,8 @@ namespace Web_Odev.Migrations
                         new
                         {
                             ID = 1,
-                            Ad = "Saç Kesimi",
-                            Sure = 30,
-                            Ucret = 50m
+                            Ad = "İşlem",
+                            Sure = 0
                         });
                 });
 
@@ -88,8 +91,22 @@ namespace Web_Odev.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("Isim")
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Isim")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Rol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Şifre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ID");
 
@@ -104,25 +121,23 @@ namespace Web_Odev.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("CalisanID")
+                    b.Property<string>("AdSoyad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CalisanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("IslemID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("KullaniciID")
-                        .HasColumnType("int");
+                    b.Property<string>("Islem")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TarihSaat")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CalisanID");
-
-                    b.HasIndex("IslemID");
-
-                    b.HasIndex("KullaniciID");
+                    b.HasIndex("CalisanId");
 
                     b.ToTable("Randevular");
                 });
@@ -139,10 +154,8 @@ namespace Web_Odev.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Isim")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SalonID")
-                        .HasColumnType("int");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ID");
 
@@ -151,9 +164,7 @@ namespace Web_Odev.Migrations
                     b.HasData(
                         new
                         {
-                            ID = 1,
-                            CalismaSaatleri = " 09:00 - 18:00",
-                            Isim = "Örnek Salon"
+                            ID = 1
                         });
                 });
 
@@ -170,27 +181,11 @@ namespace Web_Odev.Migrations
                 {
                     b.HasOne("Web_Odev.Models.Calisan", "Calisan")
                         .WithMany("Randevular")
-                        .HasForeignKey("CalisanID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Web_Odev.Models.Islem", "Islem")
-                        .WithMany()
-                        .HasForeignKey("IslemID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Web_Odev.Models.Kullanici", "Kullanici")
-                        .WithMany()
-                        .HasForeignKey("KullaniciID")
+                        .HasForeignKey("CalisanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Calisan");
-
-                    b.Navigation("Islem");
-
-                    b.Navigation("Kullanici");
                 });
 
             modelBuilder.Entity("Web_Odev.Models.Calisan", b =>

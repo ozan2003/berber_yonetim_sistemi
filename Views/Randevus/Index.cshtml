@@ -1,35 +1,33 @@
 ﻿@model IEnumerable<Web_Odev.Models.Randevu>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Randevu Listesi";
 }
 
-<h1>Index</h1>
+<h1>Randevu Listesi</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TarihSaat)
-            </th>
-            <th></th>
+            <th>Ad Soyad</th>
+            <th>İşlem</th>
+            <th>Tarih ve Saat</th>
+            <th>Çalışan</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarihSaat)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.AdSoyad</td>
+                <td>@item.Islem</td>
+                <td>@item.TarihSaat.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@item.Calisan?.Isim</td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<div>
+    <a asp-action="Create" class="btn btn-primary">Yeni Randevu Al</a>
+</div>

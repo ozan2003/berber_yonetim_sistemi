@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,12 +21,14 @@ namespace Web_Odev.Controllers
         }
 
         // GET: Calisans
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Calisanlar.ToListAsync());
         }
 
         // GET: Calisans/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -49,26 +52,24 @@ namespace Web_Odev.Controllers
         }
 
         // GET: Calisans/Create
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-
-        // POST: Calisans/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Isim")] Calisan calisan)
+        public async Task<IActionResult> Create(Calisan calisan)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(calisan);
+                _context.Calisanlar.Add(calisan); // Yeni çalışan ekleniyor
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Çalışan listesine yönlendir
             }
-            return View(calisan);
+            return View(calisan); // Model hatalıysa tekrar aynı sayfa gösterilir
         }
 
         // GET: Calisans/Edit/5

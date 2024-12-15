@@ -4,11 +4,28 @@
 
 <div class="text-center">
     <h1>Hoşgeldiniz</h1>
-    <p>Yeni bir randevu almak için <a href="/Randevus/Create">tıklayın</a></p>
 
-    <p>Çalışan eklemek için <a href="/Calisans/Create">tıklayın</a></p>
-
-    <p>Çalışanları görmek için <a href="/Calisans/Index">tıklayın</a></p>
-
-    <p>Çalışanları düzenlemek için <a href="/Calisans/Details">tıklayın</a></p>
+    @if (User.IsInRole("Admin"))
+    {
+        <!-- Admin için Admin Paneli ve Çıkış Yap Butonları -->
+        <a href="/Admin/Dashboard" class="btn btn-danger">Admin Paneli</a>
+        <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-dark">Çıkış Yap</button>
+        </form>
+    }
+    else if (User.Identity.IsAuthenticated)
+    {
+        <!-- Normal Kullanıcılar için Randevu Al ve Çıkış Yap Butonları -->
+        <a href="/Randevus/Create" class="btn btn-info">Randevu Al</a>
+        <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-dark">Çıkış Yap</button>
+        </form>
+    }
+    else
+    {
+        <!-- Giriş Yapmamış Kullanıcılar için Butonlar -->
+        <a href="/Admin/Login" class="btn btn-primary">Admin Girişi</a>
+        <a href="/Account/Login" class="btn btn-secondary">Kullanıcı Girişi</a>
+        <a href="/Account/Register" class="btn btn-success">Kayıt Ol</a>
+    }
 </div>

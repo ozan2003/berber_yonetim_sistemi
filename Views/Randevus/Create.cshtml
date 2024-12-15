@@ -1,33 +1,58 @@
 ﻿@model Web_Odev.Models.Randevu
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Randevu Al";
 }
 
-<h1>Create</h1>
+<h1>Randevu Al</h1>
 
-<h4>Randevu</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Ad Soyad -->
+            <div class="form-group">
+                <label asp-for="AdSoyad" class="control-label"></label>
+                <input asp-for="AdSoyad" class="form-control" placeholder="Adınızı ve Soyadınızı Giriniz" />
+                <span asp-validation-for="AdSoyad" class="text-danger"></span>
+            </div>
+
+            <!-- İşlem -->
+            <div class="form-group">
+                <label asp-for="Islem" class="control-label"></label>
+                <input asp-for="Islem" class="form-control" placeholder="Yapılacak İşlemi Giriniz" />
+                <span asp-validation-for="Islem" class="text-danger"></span>
+            </div>
+
+            <!-- Tarih ve Saat -->
             <div class="form-group">
                 <label asp-for="TarihSaat" class="control-label"></label>
-                <input asp-for="TarihSaat" class="form-control" />
+                <input asp-for="TarihSaat" class="form-control" type="datetime-local" />
                 <span asp-validation-for="TarihSaat" class="text-danger"></span>
             </div>
+
+            <!-- Çalışan Seçimi -->
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label for="CalisanId" class="control-label">Çalışan Seçimi</label>
+                <select asp-for="CalisanId" asp-items="ViewBag.Calisanlar" class="form-control"></select>
+                <span asp-validation-for="CalisanId" class="text-danger"></span>
+            </div>
+
+            <!-- Submit Butonu -->
+            <div class="form-group">
+                <input type="submit" value="Randevu Al" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Geri Dön</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

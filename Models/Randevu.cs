@@ -5,17 +5,23 @@ namespace Web_Odev.Models
     public class Randevu
     {
         [Key]
-        public int ID { get; set; }
+        public int ID { get; set; } // Birincil anahtar
 
         [Required]
-        [Display(Name = "Tarih ve Saat")]
-        public DateTime TarihSaat { get; set; }
-        //public int IslemID { get; set; }
+        [Display(Name = "Ad Soyad")]
+        public string? AdSoyad { get; set; } // Kullanıcı adı
 
-        public Islem? Islem { get; set; }
-        //public int CalisanID { get; set; }
-        public Calisan? Calisan { get; set; }
-        //public int KullaniciID { get; set; }
-        public Kullanici? Kullanici { get; set; }
+        [Required]
+        [Display(Name = "Yapılacak İşlem")]
+        public string? Islem { get; set; } // İşlem (ör: Saç Kesimi, Boyama)
+
+        [Required]
+        [Display(Name = "Randevu Tarihi ve Saati")]
+        public DateTime TarihSaat { get; set; } // Randevu zamanı
+
+        [Required]
+        [Display(Name = "Çalışan")]
+        public int CalisanId { get; set; } // Çalışan ID
+        public Calisan? Calisan { get; set; } // Çalışan bilgisi
     }
 }

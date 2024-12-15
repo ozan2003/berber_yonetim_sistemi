@@ -4,6 +4,8 @@ using Web_Odev.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web_Odev.Controllers
 {
@@ -23,17 +25,35 @@ namespace Web_Odev.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(Kullanici kullanici)
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(string username, string email, string password)
         {
-            if (ModelState.IsValid)
+            // Aynı email kontrolü
+            var existingUser = await _context.Kullanicilar
+                .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (existingUser != null)
             {
-                // Şifreyi hashleyebilirsiniz (isteğe bağlı)
-                _context.Kullanicilar.Add(kullanici);
-                _context.SaveChanges();
-                return RedirectToAction("Login");
+                ModelState.AddModelError("Email", "Bu email adresi zaten kullanılmış.");
+                return View();
             }
-            return View(kullanici);
+
+            // Yeni kullanıcı ekleme
+            var newUser = new Kullanici
+            {
+                Isim = username,
+                Email = email,
+                Şifre = password, // Şifreleme eklenebilir
+                Rol = "User"
+            };
+
+            _context.Kullanicilar.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Login", "Account");
         }
+        
+
 
         [HttpGet]
         public IActionResult Login()
@@ -67,11 +87,15 @@ namespace Web_Odev.Controllers
             return View();
         }
 
+        [HttpGet]
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login");
+            return RedirectToAction("Index", "Home");
         }
+
+
     }
 }
