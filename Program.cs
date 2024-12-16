@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Veritabaný baðlantýsýný ekle
+// VeritabanÄ± baÄŸlantÄ±sÄ±nÄ± ekle
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -15,10 +15,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Admin/Login"; // Giriþ sayfasý
-        options.AccessDeniedPath = "/Admin/AccessDenied"; // Yetkisiz eriþim sayfasý
-        options.ExpireTimeSpan = TimeSpan.FromHours(2); // Oturum süresi
-        options.SlidingExpiration = true; // Aktif kullanýmda oturumu uzat
+        options.LoginPath = "/Admin/Login"; // GiriÅŸ sayfasÄ±
+        options.AccessDeniedPath = "/Admin/AccessDenied"; // Yetkisiz eriÅŸim sayfasÄ±
+        options.ExpireTimeSpan = TimeSpan.FromHours(2); // Oturum sï¿½resi
+        options.SlidingExpiration = true; // Aktif kullanÄ±mda oturumu uzat
     });
 
 // Authorization servislerini ekle
