@@ -150,6 +150,9 @@ namespace Web_Odev.Controllers
 
 
         // GET: Randevus/Delete/5
+        [HttpPost]
+        [Authorize(Roles = "Admin")] // Sadece Admin rolü erişebilir
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
