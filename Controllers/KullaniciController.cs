@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -153,5 +155,43 @@ namespace Web_Odev.Controllers
         {
             return _context.Kullanicilar.Any(e => e.ID == id);
         }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(Kullanici kullanici)
+        {
+            // Doğrulama
+            if (!ModelState.IsValid)
+            {
+                // Hata mesajlarını loglayın
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine($"ModelState Hatası: {error.ErrorMessage}");
+                }
+
+                return View(kullanici); // Hatalı durumda formu doldurarak geri döndür
+            }
+
+            // Aynı email kontrolü
+            var existingUser = await _context.Kullanicilar
+                .FirstOrDefaultAsync(u => u.Email == kullanici.Email);
+
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Email", "Bu email adresi zaten kullanılmış.");
+                return View(kullanici); // Hatalı durumda formu doldurarak geri döndür
+            }
+
+            // Şifreyi hashleyerek kaydet
+            var passwordHasher = new PasswordHasher<string>();
+            kullanici.Şifre = passwordHasher.HashPassword(null, kullanici.Şifre);
+
+            // Yeni kullanıcı ekleme
+            kullanici.Rol = "User"; // Varsayılan rol
+            _context.Kullanicilar.Add(kullanici);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Login", "Account");
+        }
+
     }
 }

@@ -4,19 +4,20 @@ namespace Web_Odev.Models
 {
     public class Kullanici
     {
-        [Key]
-        public int ID { get; set; } // Birincil anahtar
+        
+            public int ID { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        [Display(Name = "Kullanıcı İsmi")]
-        public string? Isim { get; set; }
+            [Required(ErrorMessage = "Kullanıcı adı boş bırakılamaz.")]
+            public string Isim { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string? Şifre { get; set; }
+            [Required(ErrorMessage = "E-posta boş bırakılamaz.")]
+            [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
+            public string Email { get; set; }
 
-        public string? Email { get; set; }
+            [Required(ErrorMessage = "Şifre boş bırakılamaz.")]
+            [MinLength(6, ErrorMessage = "Şifre en az 6 karakter olmalıdır.")]
+            public string Şifre { get; set; }
         public string Rol { get; set; } = "User"; // Varsayılan rol
-    }
 }
+    }
+
