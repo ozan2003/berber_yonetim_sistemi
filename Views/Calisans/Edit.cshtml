@@ -1,34 +1,35 @@
 ﻿@model Web_Odev.Models.Calisan
-
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Düzenle";
 }
-
-<h1>Edit</h1>
-
-<h4>Calisan</h4>
+<h1>Çalışan Bilgilerini Düzenle</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
-                <label asp-for="Isim" class="control-label"></label>
+                <label asp-for="Isim" class="control-label">İsim</label>
                 <input asp-for="Isim" class="form-control" />
                 <span asp-validation-for="Isim" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="UzmanlikAlanlari" class="control-label">Uzmanlık Alanları</label>
+                <input asp-for="UzmanlikAlanlari" class="form-control" />
+                <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MusaitlikSaatleri" class="control-label">Müsaitlik Saatleri</label>
+                <input asp-for="MusaitlikSaatleri" class="form-control" />
+                <span asp-validation-for="MusaitlikSaatleri" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Listeye Geri Dön</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

@@ -35,15 +35,38 @@ namespace Web_Odev.Controllers
                 return NotFound();
             }
 
-            var kullanici = await _context.Kullanicilar
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (kullanici == null)
+            var calisan = await _context.Calisanlar
+                .FirstOrDefaultAsync(c => c.ID == id);
+
+            if (calisan == null)
             {
                 return NotFound();
             }
 
-            return View(kullanici);
+            // Uzmanlık Alanlarını işleme
+            List<string> uzmanlikAlanlari = !string.IsNullOrEmpty(calisan.UzmanlikAlanlari)
+                ? calisan.UzmanlikAlanlari.Split(',')
+                    .Select(uzmanlik => uzmanlik.Trim())
+                    .ToList()
+                : new List<string> { "Uzmanlık alanı bulunmuyor." };
+
+            // Müsaitlik Saatlerini işleme
+            string musaitlikSaatleri = !string.IsNullOrEmpty(calisan.MusaitlikSaatleri)
+                ? calisan.MusaitlikSaatleri
+                : "Müsaitlik saatleri bulunmuyor.";
+
+            // ViewBag yerine ViewModel kullanabilirsiniz
+            ViewBag.UzmanlikAlanlari = uzmanlikAlanlari;
+            ViewBag.MusaitlikSaatleri = musaitlikSaatleri;
+
+            return View(calisan);
         }
+
+
+
+
+
+
 
         // GET: Kullanicis/Create
         public IActionResult Create()

@@ -73,27 +73,21 @@ namespace Web_Odev.Controllers
         }
 
         // GET: Calisans/Edit/5
+        // GET: Edit
+        // GET: Edit
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var calisan = await _context.Calisanlar.FindAsync(id);
-            if (calisan == null)
-            {
-                return NotFound();
-            }
+            if (calisan == null) return NotFound();
             return View(calisan);
         }
 
-        // POST: Calisans/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("ID,Isim")] Calisan calisan)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Isim,UzmanlikAlanlari,MusaitlikSaatleri")] Calisan calisan)
         {
             if (id != calisan.ID)
             {
@@ -104,7 +98,20 @@ namespace Web_Odev.Controllers
             {
                 try
                 {
-                    _context.Update(calisan);
+                    // Veritabanından mevcut çalışanı al
+                    var existingCalisan = await _context.Calisanlar.FindAsync(id);
+
+                    if (existingCalisan == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Varolan çalışanın özelliklerini güncelle
+                    existingCalisan.Isim = calisan.Isim;
+                    existingCalisan.UzmanlikAlanlari = calisan.UzmanlikAlanlari;
+                    existingCalisan.MusaitlikSaatleri = calisan.MusaitlikSaatleri;
+
+                    _context.Update(existingCalisan);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -122,6 +129,9 @@ namespace Web_Odev.Controllers
             }
             return View(calisan);
         }
+
+
+
 
         // GET: Calisans/Delete/5
         public async Task<IActionResult> Delete(int? id)
