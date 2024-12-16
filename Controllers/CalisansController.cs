@@ -29,6 +29,7 @@ namespace Web_Odev.Controllers
 
         // GET: Calisans/Details/5
         [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -38,10 +39,15 @@ namespace Web_Odev.Controllers
 
             var calisan = await _context.Calisanlar
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (calisan == null)
             {
                 return NotFound();
             }
+
+            // ViewBag'e müsaitlik saatleri ve uzmanlık alanlarını ekleyin
+            ViewBag.MusaitlikSaatleri = calisan.MusaitlikSaatleri;
+            ViewBag.UzmanlikAlanlari = calisan.UzmanlikAlanlari;
 
             return View(calisan);
         }

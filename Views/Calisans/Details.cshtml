@@ -1,7 +1,5 @@
 ﻿@model Web_Odev.Models.Calisan
-
 <h1>Çalışan Detayları</h1>
-
 <div>
     <h4>Çalışan Adı: @Model.Isim</h4>
     <hr />
@@ -9,9 +7,9 @@
         <!-- Müsaitlik Saatleri -->
         <dt class="col-sm-3">Müsaitlik Saatleri</dt>
         <dd class="col-sm-9">
-            @if (!string.IsNullOrEmpty(ViewBag.MusaitlikSaatleri))
+            @if (!string.IsNullOrEmpty(Model.MusaitlikSaatleri))
             {
-                <p>@ViewBag.MusaitlikSaatleri</p>
+                <p>@Model.MusaitlikSaatleri</p>
             }
             else
             {
@@ -22,14 +20,9 @@
         <!-- Uzmanlık Alanları -->
         <dt class="col-sm-3">Uzmanlık Alanları</dt>
         <dd class="col-sm-9">
-            @if (ViewBag.UzmanlikAlanlari != null && (ViewBag.UzmanlikAlanlari as List<string>).Any())
+            @if (!string.IsNullOrEmpty(Model.UzmanlikAlanlari))
             {
-                <ul>
-                    @foreach (var uzmanlik in ViewBag.UzmanlikAlanlari as List<string>)
-                    {
-                        <li>@uzmanlik</li>
-                    }
-                </ul>
+                <p>@Model.UzmanlikAlanlari</p>
             }
             else
             {
@@ -38,7 +31,6 @@
         </dd>
     </dl>
 </div>
-
 <div>
     <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-primary">Düzenle</a>
     <a asp-action="Index" class="btn btn-secondary">Çalışan Listesine Dön</a>
