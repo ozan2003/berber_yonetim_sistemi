@@ -12,8 +12,8 @@ using Web_Odev.Data;
 namespace Web_Odev.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241215215120_AddEmailAndRoleColumn")]
-    partial class AddEmailAndRoleColumn
+    [Migration("20241216155326_Ozan2024DB")]
+    partial class Ozan2024DB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
