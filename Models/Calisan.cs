@@ -16,6 +16,9 @@ namespace Web_Odev.Models
         [Display(Name = "Uzmanlık Alanları")]
         public string? UzmanlikAlanlari { get; set; } // Örn: Saç Kesimi, Boyama
 
+        [Display(Name = "Uzmanlık Süreleri")]
+        public string? UzmanlikSureleri { get; set; } // Örn: 10, 30 (dakika cinsinden süreler)
+
         [Display(Name = "Müsaitlik Saatleri")]
         public string? MusaitlikSaatleri { get; set; } // Örn: 09:00-12:00, 13:00-17:00
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Web_Odev.Migrations
 {
     /// <inheritdoc />
-    public partial class Ozan2024DB : Migration
+    public partial class yeni1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,9 +32,9 @@ namespace Web_Odev.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Isim = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Şifre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Isim = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Şifre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -64,6 +64,7 @@ namespace Web_Odev.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Isim = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UzmanlikAlanlari = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UzmanlikSureleri = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MusaitlikSaatleri = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SalonID = table.Column<int>(type: "int", nullable: true)
                 },

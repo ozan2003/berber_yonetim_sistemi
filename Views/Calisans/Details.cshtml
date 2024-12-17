@@ -1,4 +1,5 @@
 ﻿@model Web_Odev.Models.Calisan
+
 <h1>Çalışan Detayları</h1>
 <div>
     <h4>Çalışan Adı: @Model.Isim</h4>
@@ -7,26 +8,29 @@
         <!-- Müsaitlik Saatleri -->
         <dt class="col-sm-3">Müsaitlik Saatleri</dt>
         <dd class="col-sm-9">
-            @if (!string.IsNullOrEmpty(Model.MusaitlikSaatleri))
-            {
-                <p>@Model.MusaitlikSaatleri</p>
-            }
-            else
-            {
-                <p>Müsaitlik saatleri bulunmuyor.</p>
-            }
+            @ViewBag.MusaitlikSaatleri
         </dd>
 
-        <!-- Uzmanlık Alanları -->
-        <dt class="col-sm-3">Uzmanlık Alanları</dt>
+        <!-- Uzmanlık Alanları ve Süreleri -->
+        <dt class="col-sm-3">Uzmanlık Alanları ve Süreleri</dt>
         <dd class="col-sm-9">
-            @if (!string.IsNullOrEmpty(Model.UzmanlikAlanlari))
+            @{
+                var uzmanlikAlanlari = ViewBag.UzmanlikAlanlari as List<string>;
+                var uzmanlikSureleri = ViewBag.UzmanlikSureleri as List<string>;
+            }
+
+            @if (uzmanlikAlanlari != null && uzmanlikSureleri != null && uzmanlikAlanlari.Count == uzmanlikSureleri.Count)
             {
-                <p>@Model.UzmanlikAlanlari</p>
+                <ul>
+                    @for (int i = 0; i < uzmanlikAlanlari.Count; i++)
+                    {
+                        <li>@uzmanlikAlanlari[i]: @uzmanlikSureleri[i] dakika</li>
+                    }
+                </ul>
             }
             else
             {
-                <p>Uzmanlık alanı bulunmuyor.</p>
+                <p>Uzmanlık alanı veya süre bilgisi bulunmuyor.</p>
             }
         </dd>
     </dl>

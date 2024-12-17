@@ -44,6 +44,9 @@ namespace Web_Odev.Migrations
                     b.Property<string>("UzmanlikAlanlari")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UzmanlikSureleri")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.HasIndex("SalonID");

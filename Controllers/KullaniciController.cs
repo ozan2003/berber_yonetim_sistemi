@@ -35,37 +35,36 @@ namespace Web_Odev.Controllers
                 return NotFound();
             }
 
-            var calisan = await _context.Calisanlar
-                .FirstOrDefaultAsync(c => c.ID == id);
+            var calisan = await _context.Calisanlar.FirstOrDefaultAsync(c => c.ID == id);
 
             if (calisan == null)
             {
                 return NotFound();
             }
 
-            // Uzmanlık Alanlarını işleme
-            List<string> uzmanlikAlanlari = !string.IsNullOrEmpty(calisan.UzmanlikAlanlari)
-                ? calisan.UzmanlikAlanlari.Split(',')
-                    .Select(uzmanlik => uzmanlik.Trim())
-                    .ToList()
-                : new List<string> { "Uzmanlık alanı bulunmuyor." };
+            // Uzmanlık Alanları ve Süreleri İşleme
+            var uzmanlikAlanlari = !string.IsNullOrEmpty(calisan.UzmanlikAlanlari)
+                ? calisan.UzmanlikAlanlari.Split(',').Select(u => u.Trim()).ToList()
+                : new List<string>();
 
-            // Müsaitlik Saatlerini işleme
-            string musaitlikSaatleri = !string.IsNullOrEmpty(calisan.MusaitlikSaatleri)
+            var uzmanlikSureleri = !string.IsNullOrEmpty(calisan.UzmanlikSureleri)
+                ? calisan.UzmanlikSureleri.Split(',').Select(s => s.Trim()).ToList()
+                : new List<string>();
+
+            // Log kontrolü
+            Console.WriteLine("Uzmanlık Alanları: " + string.Join(", ", uzmanlikAlanlari));
+            Console.WriteLine("Uzmanlık Süreleri: " + string.Join(", ", uzmanlikSureleri));
+
+            // ViewBag ile verileri View'e gönder
+            ViewBag.UzmanlikAlanlari = uzmanlikAlanlari;
+            ViewBag.UzmanlikSureleri = uzmanlikSureleri;
+
+            ViewBag.MusaitlikSaatleri = !string.IsNullOrEmpty(calisan.MusaitlikSaatleri)
                 ? calisan.MusaitlikSaatleri
                 : "Müsaitlik saatleri bulunmuyor.";
 
-            // ViewBag yerine ViewModel kullanabilirsiniz
-            ViewBag.UzmanlikAlanlari = uzmanlikAlanlari;
-            ViewBag.MusaitlikSaatleri = musaitlikSaatleri;
-
             return View(calisan);
         }
-
-
-
-
-
 
 
         // GET: Kullanicis/Create

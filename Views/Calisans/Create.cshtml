@@ -8,10 +8,10 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <!-- Çalışan İsmi -->
+            <!-- Isim -->
             <div class="form-group">
                 <label asp-for="Isim" class="control-label"></label>
                 <input asp-for="Isim" class="form-control" />
@@ -21,8 +21,15 @@
             <!-- Uzmanlık Alanları -->
             <div class="form-group">
                 <label asp-for="UzmanlikAlanlari" class="control-label"></label>
-                <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Örn: Saç Kesimi, Boyama" />
+                <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Örn: Sac Boyama, Sakal Kesimi" />
                 <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
+            </div>
+
+            <!-- Uzmanlık Süreleri -->
+            <div class="form-group">
+                <label asp-for="UzmanlikSureleri" class="control-label"></label>
+                <input asp-for="UzmanlikSureleri" class="form-control" placeholder="Örn: 10, 30 (dakika cinsinden)" />
+                <span asp-validation-for="UzmanlikSureleri" class="text-danger"></span>
             </div>
 
             <!-- Müsaitlik Saatleri -->
@@ -32,9 +39,8 @@
                 <span asp-validation-for="MusaitlikSaatleri" class="text-danger"></span>
             </div>
 
-            <!-- Submit Butonu -->
             <div class="form-group">
-                <input type="submit" value="Ekle" class="btn btn-primary" />
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -43,6 +49,7 @@
 <div>
     <a asp-action="Index">Çalışan Listesine Dön</a>
 </div>
+
 
 @section Scripts {
     @{

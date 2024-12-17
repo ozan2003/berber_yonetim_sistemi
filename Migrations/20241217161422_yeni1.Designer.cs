@@ -12,8 +12,8 @@ using Web_Odev.Data;
 namespace Web_Odev.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241216230522_migration6")]
-    partial class migration6
+    [Migration("20241217161422_yeni1")]
+    partial class yeni1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,9 @@ namespace Web_Odev.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UzmanlikAlanlari")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UzmanlikSureleri")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
