@@ -67,7 +67,6 @@ namespace Web_Odev.Controllers
             ViewBag.Calisanlar = calisanlar; // View'a gönderiyoruz
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Randevu randevu)
@@ -82,17 +81,15 @@ namespace Web_Odev.Controllers
             }
 
             // Çalışanın müsaitlik saatlerini kontrol et
-            var randevuSaati = randevu.TarihSaat.ToString("HH:mm"); // Randevu saati (ör: "10:30")
-            var musaitlikSaatleri = calisan.MusaitlikSaatleri.Split(", "); // Örn: ["09:00-12:00", "13:00-17:00"]
+            var randevuZamani = randevu.TarihSaat.TimeOfDay;
+            var musaitlikSaatleri = calisan.MusaitlikSaatleri.Split(", ");
 
             bool uygunMu = musaitlikSaatleri.Any(saatAraligi =>
             {
-                var saatler = saatAraligi.Split('-'); // ["09:00", "12:00"]
-                var baslangic = TimeSpan.Parse(saatler[0]); // Başlangıç saati
-                var bitis = TimeSpan.Parse(saatler[1]); // Bitiş saati
-                var randevuZamani = randevu.TarihSaat.TimeOfDay; // Randevu zamanı
-
-                return randevuZamani >= baslangic && randevuZamani <= bitis;
+                var saatler = saatAraligi.Split('-');
+                var baslangic = TimeSpan.Parse(saatler[0]);
+                var bitis = TimeSpan.Parse(saatler[1]);
+                return randevuZamani >= baslangic && randevuZamani < bitis;
             });
 
             if (!uygunMu)
@@ -101,16 +98,37 @@ namespace Web_Odev.Controllers
                 return View(randevu);
             }
 
-            // Randevu uygun saatlerdeyse kaydet
+            // Aynı çalışana aynı saatte randevu var mı kontrolü
+            bool calisanCakisiyorMu = await _context.Randevular
+                .AnyAsync(r => r.CalisanId == randevu.CalisanId && r.TarihSaat == randevu.TarihSaat);
+
+            if (calisanCakisiyorMu)
+            {
+                ModelState.AddModelError("TarihSaat", "Bu çalışana bu saatte zaten bir randevu mevcut.");
+                return View(randevu);
+            }
+
+            // Genel anlamda aynı saatte başka randevu var mı kontrolü
+            bool genelCakisiyorMu = await _context.Randevular
+                .AnyAsync(r => r.TarihSaat == randevu.TarihSaat);
+
+            if (genelCakisiyorMu)
+            {
+                ModelState.AddModelError("TarihSaat", "Bu saat diliminde zaten bir randevu mevcut.");
+                return View(randevu);
+            }
+
+            // Eğer tüm kontroller geçildiyse randevuyu kaydet
             if (ModelState.IsValid)
             {
                 _context.Randevular.Add(randevu);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
 
             return View(randevu);
         }
+
 
 
         // POST: Randevus/Edit/5
