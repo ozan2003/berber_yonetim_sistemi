@@ -109,7 +109,7 @@ namespace Web_Odev.Controllers
         // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Isim,UzmanlikAlanlari,MusaitlikSaatleri")] Calisan calisan)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Isim,UzmanlikAlanlari,UzmanlikSureleri,MusaitlikSaatleri")] Calisan calisan)
         {
             if (id != calisan.ID)
             {
@@ -131,8 +131,10 @@ namespace Web_Odev.Controllers
                     // Varolan çalışanın özelliklerini güncelle
                     existingCalisan.Isim = calisan.Isim;
                     existingCalisan.UzmanlikAlanlari = calisan.UzmanlikAlanlari;
+                    existingCalisan.UzmanlikSureleri = calisan.UzmanlikSureleri;
                     existingCalisan.MusaitlikSaatleri = calisan.MusaitlikSaatleri;
 
+                    // Veritabanına değişiklikleri kaydet
                     _context.Update(existingCalisan);
                     await _context.SaveChangesAsync();
                 }
@@ -147,10 +149,12 @@ namespace Web_Odev.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Liste sayfasına yönlendir
             }
-            return View(calisan);
+
+            return View(calisan); // Hata durumunda aynı sayfayı göster
         }
+
 
 
 

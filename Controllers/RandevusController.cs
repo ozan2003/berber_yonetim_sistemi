@@ -149,29 +149,10 @@ namespace Web_Odev.Controllers
         }
 
 
-        // GET: Randevus/Delete/5
-        [HttpPost]
-        [Authorize(Roles = "Admin")] // Sadece Admin rolü erişebilir
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var randevu = await _context.Randevular
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (randevu == null)
-            {
-                return NotFound();
-            }
-
-            return View(randevu);
-        }
 
         // POST: Randevus/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

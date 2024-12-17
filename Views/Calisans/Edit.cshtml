@@ -1,4 +1,5 @@
 ﻿@model Web_Odev.Models.Calisan
+
 @{
     ViewData["Title"] = "Düzenle";
 }
@@ -9,27 +10,43 @@
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
+
+            <!-- İsim -->
             <div class="form-group">
                 <label asp-for="Isim" class="control-label">İsim</label>
                 <input asp-for="Isim" class="form-control" />
                 <span asp-validation-for="Isim" class="text-danger"></span>
             </div>
+
+            <!-- Uzmanlık Alanları -->
             <div class="form-group">
                 <label asp-for="UzmanlikAlanlari" class="control-label">Uzmanlık Alanları</label>
-                <input asp-for="UzmanlikAlanlari" class="form-control" />
+                <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Örn: Sac Kesimi, Boyama" />
                 <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
             </div>
+
+            <!-- Uzmanlık Süreleri -->
+            <div class="form-group">
+                <label asp-for="UzmanlikSureleri" class="control-label">Uzmanlık Süreleri</label>
+                <input asp-for="UzmanlikSureleri" class="form-control" placeholder="Örn: 30, 45" />
+                <span asp-validation-for="UzmanlikSureleri" class="text-danger"></span>
+            </div>
+
+            <!-- Müsaitlik Saatleri -->
             <div class="form-group">
                 <label asp-for="MusaitlikSaatleri" class="control-label">Müsaitlik Saatleri</label>
-                <input asp-for="MusaitlikSaatleri" class="form-control" />
+                <input asp-for="MusaitlikSaatleri" class="form-control" placeholder="Örn: 09:00-12:00, 13:00-17:00" />
                 <span asp-validation-for="MusaitlikSaatleri" class="text-danger"></span>
             </div>
+
+            <!-- Kaydet Butonu -->
             <div class="form-group">
                 <input type="submit" value="Kaydet" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+
 <div>
     <a asp-action="Index">Listeye Geri Dön</a>
 </div>
