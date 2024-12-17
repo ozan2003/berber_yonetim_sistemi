@@ -23,5 +23,6 @@ namespace Web_Odev.Models
         [Display(Name = "Çalışan")]
         public int CalisanId { get; set; } // Çalışan ID
         public Calisan? Calisan { get; set; } // Çalışan bilgisi
+        public string OnayDurumu { get; set; } = "OnayBekliyor"; // Default değer
     }
 }

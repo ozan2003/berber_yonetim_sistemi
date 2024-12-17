@@ -12,6 +12,7 @@
             <th>Çalışan Adı</th>
             <th>İşlem</th>
             <th>Tarih ve Saat</th>
+            <th>Onay Durumu</th>
             @if (User.IsInRole("Admin")) // Sadece Admin için Actions sütunu göster
             {
                 <th>Actions</th>
@@ -25,12 +26,22 @@
                 <td>@randevu.Calisan?.Isim</td>
                 <td>@randevu.Islem</td>
                 <td>@randevu.TarihSaat.ToString("dd.MM.yyyy HH:mm")</td>
-                @if (User.IsInRole("Admin")) // Sadece Admin silme butonunu görür
+                <td>@randevu.OnayDurumu</td>
+                @if (User.IsInRole("Admin")) // Sadece Admin için silme ve onaylama butonları gösterilir
                 {
                     <td>
-                        <form asp-action="Delete" asp-route-id="@randevu.ID" method="post" onsubmit="return confirm('Bu randevuyu silmek istediğinize emin misiniz?');">
+                        <!-- Silme Butonu -->
+                        <form asp-action="Delete" asp-route-id="@randevu.ID" method="post" onsubmit="return confirm('Bu randevuyu silmek istediğinize emin misiniz?');" style="display:inline;">
                             <button type="submit" class="btn btn-danger btn-sm">Sil</button>
                         </form>
+
+                        <!-- Onayla Butonu -->
+                        @if (randevu.OnayDurumu != "Onaylandi") // Yalnızca Onaylanmamış randevular için
+                        {
+                            <form asp-action="Onayla" asp-route-id="@randevu.ID" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-success btn-sm">Onayla</button>
+                            </form>
+                        }
                     </td>
                 }
             </tr>

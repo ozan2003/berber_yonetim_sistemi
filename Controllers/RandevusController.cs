@@ -129,6 +129,28 @@ namespace Web_Odev.Controllers
             return View(randevu);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Onayla(int id)
+        {
+            var randevu = await _context.Randevular.FindAsync(id);
+
+            if (randevu == null)
+            {
+                return NotFound();
+            }
+
+            // Randevu durumunu güncelle
+            randevu.OnayDurumu = "Onaylandi";
+            _context.Update(randevu);
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = "Randevu başarıyla onaylandı!";
+            return RedirectToAction(nameof(Index));
+        }
+
+
 
 
         // POST: Randevus/Edit/5
