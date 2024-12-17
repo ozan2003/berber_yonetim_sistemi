@@ -69,9 +69,9 @@ namespace Web_Odev.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Randevu randevu)
+        public async Task<IActionResult> Create(Randevu randevu, string SelectedUzmanlik)
         {
-            // Seçilen çalışanı veritabanından getir
+            // Çalışanı veritabanından getir
             var calisan = await _context.Calisanlar.FindAsync(randevu.CalisanId);
 
             if (calisan == null)
@@ -80,54 +80,50 @@ namespace Web_Odev.Controllers
                 return View(randevu);
             }
 
-            // Çalışanın müsaitlik saatlerini kontrol et
-            var randevuZamani = randevu.TarihSaat.TimeOfDay;
-            var musaitlikSaatleri = calisan.MusaitlikSaatleri.Split(", ");
+            // Uzmanlık alanlarını ve sürelerini ayır
+            var uzmanlikAlanlari = calisan.UzmanlikAlanlari?.Split(',').Select(x => x.Trim()).ToList() ?? new List<string>();
+            var uzmanlikSureleri = calisan.UzmanlikSureleri?.Split(',').Select(x => int.Parse(x.Trim())).ToList() ?? new List<int>();
 
-            bool uygunMu = musaitlikSaatleri.Any(saatAraligi =>
+            // Seçilen uzmanlık alanı ve süresini belirle
+            int index = uzmanlikAlanlari.IndexOf(SelectedUzmanlik);
+            if (index < 0 || index >= uzmanlikSureleri.Count)
             {
-                var saatler = saatAraligi.Split('-');
-                var baslangic = TimeSpan.Parse(saatler[0]);
-                var bitis = TimeSpan.Parse(saatler[1]);
-                return randevuZamani >= baslangic && randevuZamani < bitis;
-            });
-
-            if (!uygunMu)
-            {
-                ModelState.AddModelError("TarihSaat", "Seçilen çalışan bu saatte müsait değil.");
+                ModelState.AddModelError("Islem", "Geçersiz uzmanlık alanı seçimi.");
                 return View(randevu);
             }
 
-            // Aynı çalışana aynı saatte randevu var mı kontrolü
-            bool calisanCakisiyorMu = await _context.Randevular
-                .AnyAsync(r => r.CalisanId == randevu.CalisanId && r.TarihSaat == randevu.TarihSaat);
+            int sure = uzmanlikSureleri[index];
+            var randevuBaslangic = randevu.TarihSaat;
+            var randevuBitis = randevu.TarihSaat.AddMinutes(sure);
 
-            if (calisanCakisiyorMu)
+            // Çalışan için çakışma kontrolü
+            var calisanRandevular = _context.Randevular
+                .Where(r => r.CalisanId == randevu.CalisanId && r.TarihSaat < randevuBitis && r.TarihSaat.AddMinutes(sure) > randevuBaslangic)
+                .ToList();
+
+            if (calisanRandevular.Any())
             {
-                ModelState.AddModelError("TarihSaat", "Bu çalışana bu saatte zaten bir randevu mevcut.");
+                ModelState.AddModelError("TarihSaat", "Bu çalışanın bu saatlerde başka bir randevusu mevcut.");
                 return View(randevu);
             }
 
-            // Genel anlamda aynı saatte başka randevu var mı kontrolü
-            bool genelCakisiyorMu = await _context.Randevular
-                .AnyAsync(r => r.TarihSaat == randevu.TarihSaat);
+            // Genel çakışma kontrolü
+            var genelCakisiyorMu = _context.Randevular
+                .Any(r => r.TarihSaat < randevuBitis && r.TarihSaat.AddMinutes(sure) > randevuBaslangic);
 
             if (genelCakisiyorMu)
             {
-                ModelState.AddModelError("TarihSaat", "Bu saat diliminde zaten bir randevu mevcut.");
+                ModelState.AddModelError("TarihSaat", "Bu saatlerde başka bir randevu mevcut.");
                 return View(randevu);
             }
 
-            // Eğer tüm kontroller geçildiyse randevuyu kaydet
-            if (ModelState.IsValid)
-            {
-                _context.Randevular.Add(randevu);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(randevu);
+            // Randevu kaydet
+            randevu.Islem = SelectedUzmanlik;
+            _context.Randevular.Add(randevu);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -210,5 +206,21 @@ namespace Web_Odev.Controllers
         {
             return _context.Randevular.Any(e => e.ID == id);
         }
+
+        [HttpGet]
+        public IActionResult GetUzmanlikAlanlari(int calisanId)
+        {
+            var calisan = _context.Calisanlar.Find(calisanId);
+            if (calisan == null || string.IsNullOrEmpty(calisan.UzmanlikAlanlari))
+            {
+                return Json(new List<string>());
+            }
+
+            var uzmanlikAlanlari = calisan.UzmanlikAlanlari.Split(',').Select(u => u.Trim()).ToList();
+            return Json(uzmanlikAlanlari);
+        }
+
+
+
     }
 }

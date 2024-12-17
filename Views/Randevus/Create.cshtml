@@ -73,35 +73,34 @@
 <h1>Randevu Al</h1>
 
 <div class="form-card">
-    <form asp-action="Create">
+    <form asp-action="Create" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <!-- Ad Soyad -->
         <div class="form-group">
-            <label asp-for="AdSoyad" class="control-label"></label>
-            <input asp-for="AdSoyad" class="form-control" placeholder="Adınızı ve Soyadınızı Giriniz" />
+            <label asp-for="AdSoyad" class="control-label">Adınız ve Soyadınız</label>
+            <input asp-for="AdSoyad" class="form-control" placeholder="Adınızı Giriniz" />
             <span asp-validation-for="AdSoyad" class="text-danger"></span>
-        </div>
-
-        <!-- İşlem -->
-        <div class="form-group">
-            <label asp-for="Islem" class="control-label"></label>
-            <input asp-for="Islem" class="form-control" placeholder="Yapılacak İşlemi Giriniz" />
-            <span asp-validation-for="Islem" class="text-danger"></span>
-        </div>
-
-        <!-- Tarih ve Saat -->
-        <div class="form-group">
-            <label asp-for="TarihSaat" class="control-label"></label>
-            <input asp-for="TarihSaat" class="form-control" type="datetime-local" />
-            <span asp-validation-for="TarihSaat" class="text-danger"></span>
         </div>
 
         <!-- Çalışan Seçimi -->
         <div class="form-group">
             <label for="CalisanId" class="control-label">Çalışan Seçimi</label>
-            <select asp-for="CalisanId" asp-items="ViewBag.Calisanlar" class="form-control"></select>
+            <select asp-for="CalisanId" asp-items="ViewBag.Calisanlar" class="form-control" id="calisanSelect"></select>
             <span asp-validation-for="CalisanId" class="text-danger"></span>
+        </div>
+
+        <!-- Uzmanlık Alanı Seçimi -->
+        <div class="form-group">
+            <label for="UzmanlikAlani" class="control-label">Uzmanlık Alanı</label>
+            <select id="uzmanlikSelect" name="SelectedUzmanlik" class="form-control"></select>
+        </div>
+
+        <!-- Tarih ve Saat -->
+        <div class="form-group">
+            <label asp-for="TarihSaat" class="control-label">Tarih ve Saat</label>
+            <input asp-for="TarihSaat" class="form-control" type="datetime-local" />
+            <span asp-validation-for="TarihSaat" class="text-danger"></span>
         </div>
 
         <!-- Submit Butonu -->
@@ -111,12 +110,22 @@
     </form>
 </div>
 
-<div>
-    <a asp-action="Index" class="back-link">Randevulari gor</a>
-</div>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        document.getElementById("calisanSelect").addEventListener("change", function () {
+            var calisanId = this.value;
+            fetch(`/Randevus/GetUzmanlikAlanlari?calisanId=${calisanId}`)
+                .then(response => response.json())
+                .then(data => {
+                    var uzmanlikSelect = document.getElementById("uzmanlikSelect");
+                    uzmanlikSelect.innerHTML = "";
+                    data.forEach(function (item) {
+                        var option = document.createElement("option");
+                        option.value = item;
+                        option.textContent = item;
+                        uzmanlikSelect.appendChild(option);
+                    });
+                });
+        });
+    </script>
 }
