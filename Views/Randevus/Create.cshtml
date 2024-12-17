@@ -4,51 +4,115 @@
     ViewData["Title"] = "Randevu Al";
 }
 
+<style>
+    /* Sayfa genel arkaplanı */
+    body {
+        background-image: url('/images/logo.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Ana başlık */
+    h1 {
+        color: #fff;
+        text-shadow: 2px 2px 4px #000;
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    /* Form kart tasarımı */
+    .form-card {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        margin: 50px auto;
+    }
+
+    /* Form inputları */
+    .form-control {
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #b5651d; /* Berber rengi */
+            box-shadow: 0 0 8px rgba(181, 101, 29, 0.5);
+        }
+
+    /* Butonlar */
+    .btn-custom {
+        background-color: #b5651d;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 25px;
+        transition: all 0.3s ease;
+        margin-top: 26px; /* Butonu aşağı kaydırır */
+    }
+
+        .btn-custom:hover {
+            background-color: #964b16;
+            transform: translateY(-3px);
+        }
+
+    .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #fff;
+        text-decoration: underline;
+    }
+
+</style>
+
 <h1>Randevu Al</h1>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="form-card">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <!-- Ad Soyad -->
-            <div class="form-group">
-                <label asp-for="AdSoyad" class="control-label"></label>
-                <input asp-for="AdSoyad" class="form-control" placeholder="Adınızı ve Soyadınızı Giriniz" />
-                <span asp-validation-for="AdSoyad" class="text-danger"></span>
-            </div>
+        <!-- Ad Soyad -->
+        <div class="form-group">
+            <label asp-for="AdSoyad" class="control-label"></label>
+            <input asp-for="AdSoyad" class="form-control" placeholder="Adınızı ve Soyadınızı Giriniz" />
+            <span asp-validation-for="AdSoyad" class="text-danger"></span>
+        </div>
 
-            <!-- İşlem -->
-            <div class="form-group">
-                <label asp-for="Islem" class="control-label"></label>
-                <input asp-for="Islem" class="form-control" placeholder="Yapılacak İşlemi Giriniz" />
-                <span asp-validation-for="Islem" class="text-danger"></span>
-            </div>
+        <!-- İşlem -->
+        <div class="form-group">
+            <label asp-for="Islem" class="control-label"></label>
+            <input asp-for="Islem" class="form-control" placeholder="Yapılacak İşlemi Giriniz" />
+            <span asp-validation-for="Islem" class="text-danger"></span>
+        </div>
 
-            <!-- Tarih ve Saat -->
-            <div class="form-group">
-                <label asp-for="TarihSaat" class="control-label"></label>
-                <input asp-for="TarihSaat" class="form-control" type="datetime-local" />
-                <span asp-validation-for="TarihSaat" class="text-danger"></span>
-            </div>
+        <!-- Tarih ve Saat -->
+        <div class="form-group">
+            <label asp-for="TarihSaat" class="control-label"></label>
+            <input asp-for="TarihSaat" class="form-control" type="datetime-local" />
+            <span asp-validation-for="TarihSaat" class="text-danger"></span>
+        </div>
 
-            <!-- Çalışan Seçimi -->
-            <div class="form-group">
-                <label for="CalisanId" class="control-label">Çalışan Seçimi</label>
-                <select asp-for="CalisanId" asp-items="ViewBag.Calisanlar" class="form-control"></select>
-                <span asp-validation-for="CalisanId" class="text-danger"></span>
-            </div>
+        <!-- Çalışan Seçimi -->
+        <div class="form-group">
+            <label for="CalisanId" class="control-label">Çalışan Seçimi</label>
+            <select asp-for="CalisanId" asp-items="ViewBag.Calisanlar" class="form-control"></select>
+            <span asp-validation-for="CalisanId" class="text-danger"></span>
+        </div>
 
-            <!-- Submit Butonu -->
-            <div class="form-group">
-                <input type="submit" value="Randevu Al" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        <!-- Submit Butonu -->
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-custom">Randevu Al</button>
+        </div>
+    </form>
 </div>
 
 <div>
-    <a asp-action="Index">Geri Dön</a>
+    <a asp-action="Index" class="back-link">Randevulari gor</a>
 </div>
 
 @section Scripts {

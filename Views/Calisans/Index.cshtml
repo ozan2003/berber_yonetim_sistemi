@@ -1,35 +1,76 @@
 ﻿@model IEnumerable<Web_Odev.Models.Calisan>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Çalışan Listesi";
 }
 
-<h1>Index</h1>
+<style>
+    body {
+        background-image: url('/images/logo.jpg'); /* Kurumsal ve ciddi bir arkaplan */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: #fff;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Isim)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Isim)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        margin: 20px auto;
+    }
+
+    .calisan-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 300px;
+        text-align: center;
+        transition: transform 0.3s;
+    }
+
+        .calisan-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .calisan-card h3 {
+            color: #444;
+        }
+
+    .btn-action {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+        .btn-action a {
+            text-decoration: none;
+        }
+
+    .btn-primary, .btn-success, .btn-danger {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="text-center">
+    <h1>Çalışan Listesi</h1>
+    <a asp-action="Create" class="btn btn-success mb-3">Yeni Çalışan Ekle</a>
+</div>
+
+<div class="card-container">
+    @foreach (var calisan in Model)
+    {
+        <div class="calisan-card">
+            <h3>@calisan.Isim</h3>
+            <p><strong>Uzmanlık Alanları:</strong> @calisan.UzmanlikAlanlari</p>
+            <div class="btn-action">
+                <a asp-action="Edit" asp-route-id="@calisan.ID" class="btn btn-primary btn-sm">Düzenle</a>
+                <a asp-action="Details" asp-route-id="@calisan.ID" class="btn btn-success btn-sm">Detay</a>
+                <a asp-action="Delete" asp-route-id="@calisan.ID" class="btn btn-danger btn-sm">Sil</a>
+            </div>
+        </div>
+    }
+</div>

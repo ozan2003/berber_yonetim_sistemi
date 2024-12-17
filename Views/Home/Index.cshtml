@@ -2,30 +2,111 @@
     ViewData["Title"] = "Berber Salonu";
 }
 
-<div class="text-center">
-    <h1>Hoşgeldiniz</h1>
+<!-- Sayfa Stili -->
+<style>
+    /* Arka Plan Görseli */
+    body {
+        background-image: url('/images/logo.jpg'); /* Görselin yolu */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: #fff; /* Yazı rengi beyaz */
+        font-family: Arial, sans-serif;
+    }
+
+    /* Ana Kutucuk */
+    .container-custom {
+        background-color: rgba(0, 0, 0, 0.7); /* Siyah hafif opak arka plan */
+        padding: 30px;
+        border-radius: 10px;
+        margin-top: 50px;
+    }
+
+    /* Butonlar */
+    .btn-custom {
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 18px;
+        color: #fff;
+        text-decoration: none;
+        display: inline-block;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-primary-custom {
+        background-color: #007bff;
+    }
+
+    .btn-secondary-custom {
+        background-color: #6c757d;
+    }
+
+    .btn-success-custom {
+        background-color: #28a745;
+    }
+
+    .btn-danger-custom {
+        background-color: #dc3545;
+    }
+
+    .btn-dark-custom {
+        background-color: #343a40;
+    }
+
+    /* Kartlar */
+    .card {
+        background-color: #222;
+        padding: 20px;
+        margin: 15px 0;
+        border-radius: 5px;
+    }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: #f0ad4e; /* Altın rengi başlık */
+        }
+</style>
+
+<!-- İçerik -->
+<div class="text-center container-custom">
+    <h1>Berber Salonumuza Hoşgeldiniz!</h1>
 
     @if (User.IsInRole("Admin"))
     {
-        <!-- Admin için Admin Paneli ve Çıkış Yap Butonları -->
-        <a href="/Admin/Dashboard" class="btn btn-danger">Admin Paneli</a>
+        <a href="/Admin/Dashboard" class="btn-custom btn-danger-custom">Admin Paneli</a>
         <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-dark">Çıkış Yap</button>
+            <button type="submit" class="btn-custom btn-dark-custom">Çıkış Yap</button>
         </form>
     }
     else if (User.Identity.IsAuthenticated)
     {
-        <!-- Normal Kullanıcılar için Randevu Al ve Çıkış Yap Butonları -->
-        <a href="/Randevus/Create" class="btn btn-info">Randevu Al</a>
+        <a href="/Randevus/Create" class="btn-custom btn-success-custom">Randevu Al</a>
         <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-dark">Çıkış Yap</button>
+            <button type="submit" class="btn-custom btn-dark-custom">Çıkış Yap</button>
         </form>
     }
     else
     {
-        <!-- Giriş Yapmamış Kullanıcılar için Butonlar -->
-        <a href="/Admin/Login" class="btn btn-primary">Admin Girişi</a>
-        <a href="/Account/Login" class="btn btn-secondary">Kullanıcı Girişi</a>
-        <a href="/Account/Register" class="btn btn-success">Kayıt Ol</a>
+        <a href="/Admin/Login" class="btn-custom btn-primary-custom">Admin Girişi</a>
+        <a href="/Account/Login" class="btn-custom btn-secondary-custom">Kullanıcı Girişi</a>
+        <a href="/Account/Register" class="btn-custom btn-success-custom">Kayıt Ol</a>
     }
+</div>
+
+<!-- Bilgilendirme Kartları -->
+<div class="container-custom" style="margin-top: 30px;">
+    <div class="card">
+        <h3>Çalışma Saatleri</h3>
+        <p>Pazartesi - Cumartesi: 09:00 - 19:00</p>
+    </div>
+    <div class="card">
+        <h3>Hizmetlerimiz</h3>
+        <p>Saç Kesimi, Sakal Tıraşı, Saç Boyama, Cilt Bakımı</p>
+    </div>
+    <div class="card">
+        <h3>İletişim</h3>
+        <p>Telefon: +90 123 456 7890 <br> Adres: İstanbul, Türkiye</p>
+    </div>
 </div>

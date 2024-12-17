@@ -2,20 +2,127 @@
     ViewData["Title"] = "Admin Paneli";
 }
 
-<div class="text-center">
-    <h1>Admin Paneli</h1>
+<!-- Modern Arkaplan ve Stil -->
+<style>
+    body {
+        background-image: url('/images/logo.jpg'); /* Kurumsal ve ciddi bir arkaplan */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: #fff;
+    }
 
-    <!-- Çalışanları Gör Butonu -->
-    <a href="/Calisans/Index" class="btn btn-primary">Çalışanları Gör</a>
+    .admin-dashboard {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-    <!-- Yeni Çalışan Ekle Butonu -->
-    <a href="/Calisans/Create" class="btn btn-success">Yeni Çalışan Ekle</a>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-    <!-- Randevuları Gör Butonu -->
-    <a href="/Randevus/Index" class="btn btn-info">Randevuları Gör</a>
+    .welcome-message {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .clock {
+        font-size: 1.5rem;
+        background: rgba(0, 0, 0, 0.1);
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center; /* Yatayda ortala */
+        align-items: center; /* Dikeyde ortala */
+        height: 60vh; /* Kartların dikeyde tam ortada durması için yükseklik */
+    }
+
+
+    .card {
+        background-color: #fff;
+        color: #333;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+        width: 250px;
+    }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .card a {
+            text-decoration: none;
+            color: inherit;
+            font-weight: bold;
+        }
+
+    .logout-button {
+        margin-top: 20px;
+    }
+
+</style>
+
+<!-- Admin Dashboard -->
+<div class="admin-dashboard">
+
+    <!-- Üst Kısım -->
+    <div class="header">
+        <div class="welcome-message">Hoşgeldiniz, @User.Identity.Name!</div>
+        <div class="clock" id="clock">00:00:00</div>
+    </div>
+
+    <!-- Ana Buton Kartları -->
+    <div class="card-container">
+        <div class="card">
+            <a href="/Calisans/Index">
+                <h3>Çalışanları Gör</h3>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="/Calisans/Create">
+                <h3>Yeni Çalışan Ekle</h3>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="/Randevus/Index">
+                <h3>Randevuları Gör</h3>
+            </a>
+        </div>
+    </div>
 
     <!-- Çıkış Yap Butonu -->
-    <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
-        <button type="submit" class="btn btn-dark">Çıkış Yap</button>
+    <form asp-action="Logout" asp-controller="Account" method="post" class="logout-button">
+        <button type="submit" class="btn btn-danger">Çıkış Yap</button>
     </form>
 </div>
+
+<!-- JavaScript ile Saat Gösterimi -->
+<script>
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>

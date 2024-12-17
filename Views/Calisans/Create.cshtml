@@ -4,55 +4,82 @@
     ViewData["Title"] = "Yeni Çalışan Ekle";
 }
 
-<h1>Yeni Çalışan Ekle</h1>
-
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <!-- Isim -->
-            <div class="form-group">
-                <label asp-for="Isim" class="control-label"></label>
-                <input asp-for="Isim" class="form-control" />
-                <span asp-validation-for="Isim" class="text-danger"></span>
-            </div>
-
-            <!-- Uzmanlık Alanları -->
-            <div class="form-group">
-                <label asp-for="UzmanlikAlanlari" class="control-label"></label>
-                <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Örn: Sac Boyama, Sakal Kesimi" />
-                <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
-            </div>
-
-            <!-- Uzmanlık Süreleri -->
-            <div class="form-group">
-                <label asp-for="UzmanlikSureleri" class="control-label"></label>
-                <input asp-for="UzmanlikSureleri" class="form-control" placeholder="Örn: 10, 30 (dakika cinsinden)" />
-                <span asp-validation-for="UzmanlikSureleri" class="text-danger"></span>
-            </div>
-
-            <!-- Müsaitlik Saatleri -->
-            <div class="form-group">
-                <label asp-for="MusaitlikSaatleri" class="control-label"></label>
-                <input asp-for="MusaitlikSaatleri" class="form-control" placeholder="Örn: 09:00-12:00, 13:00-17:00" />
-                <span asp-validation-for="MusaitlikSaatleri" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Kaydet" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Çalışan Listesine Dön</a>
-</div>
-
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+<style>
+    /* Arkaplan ve Kart Tasarımı */
+    body {
+        background-image: url('/images/logo.jpg'); /* Kurumsal ve ciddi bir arkaplan */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: #fff;
     }
-}
+
+    .form-card {
+        background: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 30px;
+        margin: 50px auto;
+        width: 100%;
+        max-width: 500px;
+    }
+
+        .form-card h1 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+    .btn-custom {
+        background: linear-gradient(to right, #ff6a00, #ee0979);
+        color: #fff;
+        border: none;
+        transition: background 0.3s;
+        margin-top: 26px; /* Butonu aşağı kaydırır */
+    }
+
+        .btn-custom:hover {
+            background: linear-gradient(to left, #ff6a00, #ee0979);
+        }
+</style>
+
+<div class="form-card">
+    <h1>Yeni Çalışan Ekle</h1>
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- Isim -->
+        <div class="form-group">
+            <label asp-for="Isim" class="control-label">İsminizi Giriniz</label>
+            <input asp-for="Isim" class="form-control" placeholder="Adınızı giriniz" />
+            <span asp-validation-for="Isim" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="UzmanlikAlanlari" class="control-label">Uzmanlık Alanları</label>
+            <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Uzmanlık alanlarını virgülle ayırarak giriniz" />
+            <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="UzmanlikSureleri" class="control-label">Uzmanlık Süreleri</label>
+            <input asp-for="UzmanlikSureleri" class="form-control" placeholder="Süreleri virgülle ayırarak giriniz (örn: 10, 20)" />
+            <span asp-validation-for="UzmanlikSureleri" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MusaitlikSaatleri" class="control-label">Müsaitlik Saatleri</label>
+            <input asp-for="MusaitlikSaatleri" class="form-control" placeholder="Müsaitlik saatlerini giriniz (örn: 09:00-17:00)" />
+            <span asp-validation-for="MusaitlikSaatleri" class="text-danger"></span>
+        </div>
+
+
+        <!-- Kaydet Butonu -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-custom">Kaydet</button>
+        </div>
+    </form>
+</div>
+<div class="text-center mt-3">
+    <a asp-action="Index" class="btn btn-secondary">Çalışan Listesine Dön</a>
+</div>

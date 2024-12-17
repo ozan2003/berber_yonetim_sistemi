@@ -1,19 +1,61 @@
 ﻿@model Web_Odev.Models.Calisan
 
-<h1>Çalışan Detayları</h1>
-<div>
-    <h4>Çalışan Adı: @Model.Isim</h4>
-    <hr />
-    <dl class="row">
-        <!-- Müsaitlik Saatleri -->
-        <dt class="col-sm-3">Müsaitlik Saatleri</dt>
-        <dd class="col-sm-9">
-            @ViewBag.MusaitlikSaatleri
-        </dd>
+@{
+    ViewData["Title"] = "Çalışan Detayları";
+}
 
-        <!-- Uzmanlık Alanları ve Süreleri -->
-        <dt class="col-sm-3">Uzmanlık Alanları ve Süreleri</dt>
-        <dd class="col-sm-9">
+<style>
+    body {
+        background-image: url('/images/logo.jpg'); /* Kurumsal ve ciddi bir arkaplan */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: #fff;
+    }
+
+    .details-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        max-width: 600px;
+        margin: 50px auto;
+    }
+
+        .details-card h1 {
+            color: #4e73df;
+            text-align: center;
+        }
+
+        .details-card dt {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .details-card dd {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+    .btn-group {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="details-card">
+    <h1>Çalışan Detayları</h1>
+    <hr />
+    <dl>
+        <dt>Çalışan Adı</dt>
+        <dd>@Model.Isim</dd>
+
+        <dt>Müsaitlik Saatleri</dt>
+        <dd>@ViewBag.MusaitlikSaatleri</dd>
+
+        <dt>Uzmanlık Alanları ve Süreleri</dt>
+        <dd>
             @{
                 var uzmanlikAlanlari = ViewBag.UzmanlikAlanlari as List<string>;
                 var uzmanlikSureleri = ViewBag.UzmanlikSureleri as List<string>;
@@ -34,8 +76,8 @@
             }
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-primary">Düzenle</a>
-    <a asp-action="Index" class="btn btn-secondary">Çalışan Listesine Dön</a>
+    <div class="btn-group">
+        <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-primary">Düzenle</a>
+        <a asp-action="Index" class="btn btn-secondary">Listeye Geri Dön</a>
+    </div>
 </div>

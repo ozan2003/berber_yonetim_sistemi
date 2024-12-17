@@ -4,47 +4,101 @@
     ViewData["Title"] = "Randevu Listesi";
 }
 
-<h2>Randevular</h2>
+<style>
+    body {
+        background-image: url('/images/logo.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        font-family: Arial, sans-serif;
+    }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Çalışan Adı</th>
-            <th>İşlem</th>
-            <th>Tarih ve Saat</th>
-            <th>Onay Durumu</th>
-            @if (User.IsInRole("Admin")) // Sadece Admin için Actions sütunu göster
-            {
-                <th>Actions</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var randevu in Model)
-        {
-            <tr>
-                <td>@randevu.Calisan?.Isim</td>
-                <td>@randevu.Islem</td>
-                <td>@randevu.TarihSaat.ToString("dd.MM.yyyy HH:mm")</td>
-                <td>@randevu.OnayDurumu</td>
-                @if (User.IsInRole("Admin")) // Sadece Admin için silme ve onaylama butonları gösterilir
-                {
-                    <td>
-                        <!-- Silme Butonu -->
-                        <form asp-action="Delete" asp-route-id="@randevu.ID" method="post" onsubmit="return confirm('Bu randevuyu silmek istediğinize emin misiniz?');" style="display:inline;">
-                            <button type="submit" class="btn btn-danger btn-sm">Sil</button>
-                        </form>
+    .randevu-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 20px;
+    }
 
-                        <!-- Onayla Butonu -->
-                        @if (randevu.OnayDurumu != "Onaylandi") // Yalnızca Onaylanmamış randevular için
-                        {
-                            <form asp-action="Onayla" asp-route-id="@randevu.ID" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-success btn-sm">Onayla</button>
-                            </form>
-                        }
-                    </td>
-                }
-            </tr>
+    .randevu-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        width: 350px;
+        text-align: center;
+        transition: transform 0.3s;
+    }
+
+        .randevu-card:hover {
+            transform: scale(1.05);
         }
-    </tbody>
-</table>
+
+        .randevu-card h4 {
+            color: #4e73df;
+            margin-bottom: 10px;
+        }
+
+        .randevu-card p {
+            margin: 8px 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+    .btn-actions {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 10px; /* Butonlar arasında boşluk */
+    }
+
+        .btn-actions form {
+            margin: 0;
+        }
+
+    h1 {
+        background-color: #ffffff; /* Beyaz arkaplan */
+        color: #333; /* Yazı rengi */
+        padding: 10px 0;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="text-center">
+    <h1>Randevu Listesi</h1>
+</div>
+
+<div class="randevu-container">
+    @foreach (var randevu in Model)
+    {
+        <div class="randevu-card">
+            <h4>Çalışan: @randevu.Calisan?.Isim</h4>
+            <p><strong>Randevu Alan:</strong> @randevu.AdSoyad</p>
+            <p><strong>İşlem:</strong> @randevu.Islem</p>
+            <p><strong>Tarih & Saat:</strong> @randevu.TarihSaat.ToString("dd.MM.yyyy HH:mm")</p>
+            <p><strong>Onay Durumu:</strong> @randevu.OnayDurumu</p>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="btn-actions">
+                    <!-- Silme Butonu -->
+                    <form asp-action="Delete" asp-route-id="@randevu.ID" method="post" onsubmit="return confirm('Bu randevuyu silmek istediğinize emin misiniz?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                    </form>
+
+                    <!-- Onayla Butonu -->
+                    @if (randevu.OnayDurumu != "Onaylandi")
+                    {
+                        <form asp-action="Onayla" asp-route-id="@randevu.ID" method="post">
+                            <button type="submit" class="btn btn-success btn-sm">Onayla</button>
+                        </form>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

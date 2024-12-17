@@ -1,52 +1,88 @@
 ﻿@model Web_Odev.Models.Calisan
 
 @{
-    ViewData["Title"] = "Düzenle";
+    ViewData["Title"] = "Çalışan Bilgilerini Düzenle";
 }
-<h1>Çalışan Bilgilerini Düzenle</h1>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ID" />
 
-            <!-- İsim -->
-            <div class="form-group">
-                <label asp-for="Isim" class="control-label">İsim</label>
-                <input asp-for="Isim" class="form-control" />
-                <span asp-validation-for="Isim" class="text-danger"></span>
-            </div>
+<style>
+    body {
+        background-image: url('/images/logo.jpg'); /* Kurumsal ve ciddi bir arkaplan */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        color: #fff;
+    }
 
-            <!-- Uzmanlık Alanları -->
-            <div class="form-group">
-                <label asp-for="UzmanlikAlanlari" class="control-label">Uzmanlık Alanları</label>
-                <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Örn: Sac Kesimi, Boyama" />
-                <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
-            </div>
+    .edit-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        max-width: 500px;
+        margin: 50px auto;
+    }
 
-            <!-- Uzmanlık Süreleri -->
-            <div class="form-group">
-                <label asp-for="UzmanlikSureleri" class="control-label">Uzmanlık Süreleri</label>
-                <input asp-for="UzmanlikSureleri" class="form-control" placeholder="Örn: 30, 45" />
-                <span asp-validation-for="UzmanlikSureleri" class="text-danger"></span>
-            </div>
+        .edit-card h1 {
+            color: #17a2b8;
+            text-align: center;
+        }
 
-            <!-- Müsaitlik Saatleri -->
-            <div class="form-group">
-                <label asp-for="MusaitlikSaatleri" class="control-label">Müsaitlik Saatleri</label>
-                <input asp-for="MusaitlikSaatleri" class="form-control" placeholder="Örn: 09:00-12:00, 13:00-17:00" />
-                <span asp-validation-for="MusaitlikSaatleri" class="text-danger"></span>
-            </div>
+    .form-group label {
+        font-weight: bold;
+    }
 
-            <!-- Kaydet Butonu -->
-            <div class="form-group">
-                <input type="submit" value="Kaydet" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+    .btn-custom {
+        background: #28a745;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        margin-top: 15px;
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
 
-<div>
-    <a asp-action="Index">Listeye Geri Dön</a>
+        .btn-custom:hover {
+            background: #218838;
+        }
+</style>
+
+<div class="edit-card">
+    <h1>Çalışan Bilgilerini Düzenle</h1>
+    <hr />
+    <form asp-action="Edit" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="ID" />
+
+        <!-- İsim -->
+        <div class="form-group">
+            <label asp-for="Isim">İsim</label>
+            <input asp-for="Isim" class="form-control" placeholder="Çalışan Adını Giriniz" />
+            <span asp-validation-for="Isim" class="text-danger"></span>
+        </div>
+
+        <!-- Uzmanlık Alanları -->
+        <div class="form-group">
+            <label asp-for="UzmanlikAlanlari">Uzmanlık Alanları</label>
+            <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Örn: Saç Kesimi, Boyama" />
+            <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
+        </div>
+
+        <!-- Uzmanlık Süreleri -->
+        <div class="form-group">
+            <label asp-for="UzmanlikSureleri">Uzmanlık Süreleri</label>
+            <input asp-for="UzmanlikSureleri" class="form-control" placeholder="Örn: 30, 45" />
+            <span asp-validation-for="UzmanlikSureleri" class="text-danger"></span>
+        </div>
+
+        <!-- Müsaitlik Saatleri -->
+        <div class="form-group">
+            <label asp-for="MusaitlikSaatleri">Müsaitlik Saatleri</label>
+            <input asp-for="MusaitlikSaatleri" class="form-control" placeholder="Örn: 09:00-12:00" />
+            <span asp-validation-for="MusaitlikSaatleri" class="text-danger"></span>
+        </div>
+
+        <!-- Kaydet Butonu -->
+        <button type="submit" class="btn btn-custom">Kaydet</button>
+    </form>
 </div>
