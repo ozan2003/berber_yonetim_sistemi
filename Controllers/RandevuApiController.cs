@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Web_Odev.Data;
 using Web_Odev.Models;
-using System.Linq;
-using System.Threading.Tasks;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -19,14 +19,14 @@ public class RandevuApiController : ControllerBase
     [HttpGet]
     public IActionResult GetRandevular()
     {
-        var randevular = _context.Randevular
-            .Where(r => r.OnayDurumu == "Onaylandi") // Onaylanmış randevuları getir
+        var randevular = _context
+            .Randevular.Where(r => r.OnayDurumu == "Onaylandi") // Onaylanmış randevuları getir
             .Select(r => new
             {
                 r.ID,
                 r.AdSoyad,
                 r.TarihSaat,
-                Calisan = r.Calisan.Isim
+                Calisan = r.Calisan.Isim,
             })
             .ToList();
 
@@ -52,14 +52,11 @@ public class RandevuApiController : ControllerBase
     [HttpGet("UygunCalisanlar")]
     public IActionResult GetUygunCalisanlar([FromQuery] DateTime tarihSaat)
     {
-        var uygunCalisanlar = _context.Calisanlar
-            .Where(c => !_context.Randevular
-                .Any(r => r.CalisanId == c.ID && r.TarihSaat == tarihSaat)) // Randevusu olmayan çalışanlar
-            .Select(c => new
-            {
-                c.ID,
-                c.Isim
-            })
+        var uygunCalisanlar = _context
+            .Calisanlar.Where(c =>
+                !_context.Randevular.Any(r => r.CalisanId == c.ID && r.TarihSaat == tarihSaat)
+            ) // Randevusu olmayan çalışanlar
+            .Select(c => new { c.ID, c.Isim })
             .ToList();
 
         return Ok(uygunCalisanlar);
