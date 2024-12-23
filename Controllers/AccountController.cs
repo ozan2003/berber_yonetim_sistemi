@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Web_Odev.Data;
-using Web_Odev.Models;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity; // Şifre hashing için gerekli
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Web_Odev.Data;
+using Web_Odev.Models;
 
 namespace Web_Odev.Controllers
 {
@@ -41,8 +41,9 @@ namespace Web_Odev.Controllers
             }
 
             // Aynı email kontrolü
-            var existingUser = await _context.Kullanicilar
-                .FirstOrDefaultAsync(u => u.Email == kullanici.Email);
+            var existingUser = await _context.Kullanicilar.FirstOrDefaultAsync(u =>
+                u.Email == kullanici.Email
+            );
 
             if (existingUser != null)
             {
@@ -62,7 +63,6 @@ namespace Web_Odev.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-
         [HttpGet]
         public IActionResult Login()
         {
@@ -77,27 +77,35 @@ namespace Web_Odev.Controllers
             if (user != null)
             {
                 // Şifre doğrulama
-                var verificationResult = _passwordHasher.VerifyHashedPassword(null, user.Şifre, sifre);
+                var verificationResult = _passwordHasher.VerifyHashedPassword(
+                    null,
+                    user.Şifre,
+                    sifre
+                );
                 if (verificationResult == PasswordVerificationResult.Success)
                 {
                     // Kullanıcı girişini yönet
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, user.Isim),
-                        new Claim(ClaimTypes.Role, user.Rol)
+                        new Claim(ClaimTypes.Role, user.Rol),
                     };
 
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme
+                    );
                     var authProperties = new AuthenticationProperties
                     {
                         IsPersistent = true,
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(2)
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(2),
                     };
 
                     await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity),
-                        authProperties);
+                        authProperties
+                    );
 
                     return RedirectToAction("Index", "Home");
                 }
