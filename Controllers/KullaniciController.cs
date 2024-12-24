@@ -177,6 +177,12 @@ namespace Web_Odev.Controllers
         {
             return _context.Kullanicilar.Any(e => e.ID == id);
         }
+
+        /// <summary>
+        /// Yeni bir kullanıcı kaydı oluşturur.
+        /// </summary>
+        /// <param name="kullanici">Kullanıcı bilgilerini içeren model.</param>
+        /// <returns>Başarılı ise Login sayfasına yönlendirir, aksi halde formu tekrar gösterir.</returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(Kullanici kullanici)
