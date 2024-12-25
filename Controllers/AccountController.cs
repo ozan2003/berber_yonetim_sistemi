@@ -69,6 +69,10 @@ namespace Web_Odev.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Kullanıcı giriş işlemini gerçekleştirir.
+        /// </summary>
+        /// <returns>Giriş başarılıysa ana sayfaya yönlendirir, aksi halde giriş sayfasına geri döner.</returns>
         [HttpPost]
         public async Task<IActionResult> Login(string email, string sifre)
         {
