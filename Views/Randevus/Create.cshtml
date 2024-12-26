@@ -107,11 +107,29 @@
         <div class="form-group text-center">
             <button type="submit" class="btn btn-custom">Randevu Al</button>
         </div>
+
+        <!-- Fotoğraf (AI için) -->
+        <div class="form-group">
+            <label>Fotoğraf Seç</label>
+            <input type="file" name="PhotoFile" id="photoFile" class="form-control" accept="image/*" />
+        </div>
+
+        <div class="form-group text-center">
+            <button type="button" class="btn btn-custom" onclick="showPreview()">Öneri Göster</button>
+        </div>
     </form>
+    <hr />
+
+    <!-- Burada Önizleme Resmi Görünecek -->
+    <div id="previewContainer" style="margin-top:20px; text-align:center;">
+        <img id="previewImage" style="max-width:300px;" />
+    </div>
+
 </div>
 
 @section Scripts {
     <script>
+        // Çalışan seçince uzmanlık alanlarını dolduralım (Senin orijinal kodun)
         document.getElementById("calisanSelect").addEventListener("change", function () {
             var calisanId = this.value;
             fetch(`/Randevus/GetUzmanlikAlanlari?calisanId=${calisanId}`)
@@ -127,5 +145,41 @@
                     });
                 });
         });
+
+        // ÖNERİ GÖSTER (AJAX)
+        function showPreview() {
+            var fileInput = document.getElementById("photoFile");
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert("Lütfen bir fotoğraf seçin.");
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append("photo", fileInput.files[0]);
+
+            fetch('/Randevus/PreviewPhoto', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Sunucu hatası: " + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.base64Image) {
+                    var previewImage = document.getElementById("previewImage");
+                    // "data:image/jpeg;base64,..." şeklinde ekliyoruz
+                    previewImage.src = "data:image/jpeg;base64," + data.base64Image;
+                } else {
+                    alert("Öneri alınamadı veya fotoğraf döndürülmedi.");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Hata: " + err.message);
+            });
+        }
     </script>
 }

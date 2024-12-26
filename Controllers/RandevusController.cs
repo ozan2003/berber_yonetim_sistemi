@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Web_Odev.Data;
 using Web_Odev.Models;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Web_Odev.Controllers
 {
@@ -69,22 +72,21 @@ namespace Web_Odev.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Randevu randevu, string SelectedUzmanlik)
+        public async Task<IActionResult> Create(Randevu randevu, string SelectedUzmanlik, IFormFile PhotoFile)
         {
-            // Çalışanı veritabanından getir
+            // ÇALIŞAN & UZMANLIK KONTROLLERİ
             var calisan = await _context.Calisanlar.FindAsync(randevu.CalisanId);
-
             if (calisan == null)
             {
                 ModelState.AddModelError("CalisanId", "Geçersiz çalışan seçimi.");
                 return View(randevu);
             }
 
-            // Uzmanlık alanlarını ve sürelerini ayır
-            var uzmanlikAlanlari = calisan.UzmanlikAlanlari?.Split(',').Select(x => x.Trim()).ToList() ?? new List<string>();
-            var uzmanlikSureleri = calisan.UzmanlikSureleri?.Split(',').Select(x => int.Parse(x.Trim())).ToList() ?? new List<int>();
+            var uzmanlikAlanlari = calisan.UzmanlikAlanlari?.Split(',')
+                .Select(x => x.Trim()).ToList() ?? new List<string>();
+            var uzmanlikSureleri = calisan.UzmanlikSureleri?.Split(',')
+                .Select(x => int.Parse(x.Trim())).ToList() ?? new List<int>();
 
-            // Seçilen uzmanlık alanı ve süresini belirle
             int index = uzmanlikAlanlari.IndexOf(SelectedUzmanlik);
             if (index < 0 || index >= uzmanlikSureleri.Count)
             {
@@ -96,9 +98,10 @@ namespace Web_Odev.Controllers
             var randevuBaslangic = randevu.TarihSaat;
             var randevuBitis = randevu.TarihSaat.AddMinutes(sure);
 
-            // Çalışan için çakışma kontrolü
             var calisanRandevular = _context.Randevular
-                .Where(r => r.CalisanId == randevu.CalisanId && r.TarihSaat < randevuBitis && r.TarihSaat.AddMinutes(sure) > randevuBaslangic)
+                .Where(r => r.CalisanId == randevu.CalisanId
+                    && r.TarihSaat < randevuBitis
+                    && r.TarihSaat.AddMinutes(sure) > randevuBaslangic)
                 .ToList();
 
             if (calisanRandevular.Any())
@@ -107,22 +110,93 @@ namespace Web_Odev.Controllers
                 return View(randevu);
             }
 
-            // Genel çakışma kontrolü
             var genelCakisiyorMu = _context.Randevular
-                .Any(r => r.TarihSaat < randevuBitis && r.TarihSaat.AddMinutes(sure) > randevuBaslangic);
-
+                .Any(r => r.TarihSaat < randevuBitis
+                    && r.TarihSaat.AddMinutes(sure) > randevuBaslangic);
             if (genelCakisiyorMu)
             {
                 ModelState.AddModelError("TarihSaat", "Bu saatlerde başka bir randevu mevcut.");
                 return View(randevu);
             }
 
-            // Randevu kaydet
             randevu.Islem = SelectedUzmanlik;
             _context.Randevular.Add(randevu);
             await _context.SaveChangesAsync();
+
+            // FOTOĞRAF İŞLEMLERİ
+            if (PhotoFile != null && PhotoFile.Length > 0)
+            {
+                try
+                {
+                    var wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                    if (!Directory.Exists(wwwRootPath))
+                        Directory.CreateDirectory(wwwRootPath);
+
+                    var originalFileName = Path.GetFileName(PhotoFile.FileName);
+                    var localFilePath = Path.Combine(wwwRootPath, originalFileName);
+
+                    // Save the uploaded file
+                    using (var stream = new FileStream(localFilePath, FileMode.Create))
+                    {
+                        await PhotoFile.CopyToAsync(stream);
+                    }
+
+                    // Create the API request
+                    using var client = new HttpClient();
+                    using var request = new HttpRequestMessage(HttpMethod.Post,
+                        "https://hairstyle-changer.p.rapidapi.com/huoshan/facebody/hairstyle");
+
+                    request.Headers.Add("X-RapidAPI-Key", "4153a9853cmsh529d90af3366380p151f08jsn156dcfd4c127");
+                    request.Headers.Add("X-RapidAPI-Host", "hairstyle-changer.p.rapidapi.com");
+
+                    // Create multipart form content
+                    var multipartContent = new MultipartFormDataContent();
+
+                    // Read file as bytes and create content
+                    var imageBytes = await System.IO.File.ReadAllBytesAsync(localFilePath);
+                    var imageContent = new ByteArrayContent(imageBytes);
+                     imageContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+                    // Important: The API expects these exact form field names
+                    multipartContent.Add(imageContent, "image_target", originalFileName);
+                    multipartContent.Add(new StringContent("801"), "hair_type");
+
+                    request.Content = multipartContent;
+
+                    // Send request and process response
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            var errorContent = await response.Content.ReadAsStringAsync();
+                            ModelState.AddModelError("", $"API Hatası: {response.StatusCode} - {errorContent}");
+                            return View(randevu);
+                        }
+
+                        var body = await response.Content.ReadAsStringAsync();
+                        dynamic values = JsonConvert.DeserializeObject(body);
+                        string base64Image = values.data.image;
+
+                        // Save the processed image
+                        byte[] processedImageBytes = Convert.FromBase64String(base64Image);
+                        var fileNameWithoutExt = Path.GetFileNameWithoutExtension(originalFileName);
+                        var newFileName = fileNameWithoutExt + "_processed.jpg";
+                        var newFilePath = Path.Combine(wwwRootPath, newFileName);
+
+                        await System.IO.File.WriteAllBytesAsync(newFilePath, processedImageBytes);
+                        ViewBag.image = newFileName;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"İşlem sırasında hata: {ex.Message}");
+                    return View(randevu);
+                }
+            }
+
             return RedirectToAction(nameof(Index));
         }
+
 
 
         [HttpPost]
@@ -218,6 +292,69 @@ namespace Web_Odev.Controllers
 
             var uzmanlikAlanlari = calisan.UzmanlikAlanlari.Split(',').Select(u => u.Trim()).ToList();
             return Json(uzmanlikAlanlari);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PreviewPhoto(IFormFile photo)
+        {
+            if (photo == null || photo.Length == 0)
+            {
+                return BadRequest("Fotoğraf bulunamadı veya boş.");
+            }
+
+            try
+            {
+                // 1) Dosyayı geçici olarak kaydet
+                var wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                if (!Directory.Exists(wwwRootPath))
+                    Directory.CreateDirectory(wwwRootPath);
+
+                var fileName = Path.GetFileName(photo.FileName);
+                var localPath = Path.Combine(wwwRootPath, fileName);
+                using (var fs = new FileStream(localPath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(fs);
+                }
+
+                // 2) AI servisine gönder
+                using var client = new HttpClient();
+                using var request = new HttpRequestMessage(HttpMethod.Post,
+                    "https://hairstyle-changer.p.rapidapi.com/huoshan/facebody/hairstyle");
+
+                request.Headers.Add("X-RapidAPI-Key", "4153a9853cmsh529d90af3366380p151f08jsn156dcfd4c127");
+                request.Headers.Add("X-RapidAPI-Host", "hairstyle-changer.p.rapidapi.com");
+
+                var multipartContent = new MultipartFormDataContent();
+
+                // Fotoğrafı okuyoruz
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(localPath);
+                var fileContent = new ByteArrayContent(fileBytes);
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
+
+                // "image_target" ve "hair_type" API'ye özgü parametreler
+                multipartContent.Add(fileContent, "image_target", fileName);
+                multipartContent.Add(new StringContent("801"), "hair_type");
+
+                request.Content = multipartContent;
+
+                using var response = await client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    return BadRequest($"API Hatası: {response.StatusCode} - {errorContent}");
+                }
+
+                var body = await response.Content.ReadAsStringAsync();
+                dynamic values = JsonConvert.DeserializeObject(body);
+                string base64Image = values.data.image;
+
+                // 3) Base64’i JSON olarak dön
+                return Json(new { base64Image });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Hata: " + ex.Message);
+            }
         }
 
 
