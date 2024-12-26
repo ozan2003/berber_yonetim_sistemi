@@ -91,7 +91,7 @@ namespace Web_Odev.Controllers
                     // Kullanıcı girişini yönet
                     var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, user.Isim),
+                        new Claim(ClaimTypes.Name, user.Email),
                         new Claim(ClaimTypes.Role, user.Rol),
                     };
 

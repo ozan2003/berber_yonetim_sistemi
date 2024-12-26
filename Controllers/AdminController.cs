@@ -24,7 +24,7 @@ namespace Web_Odev.Controllers
         public async Task<IActionResult> Login(string username, string password)
         {
             // Sabit admin kullanıcı bilgileri (projede database ile kontrol edilmeli)
-            const string AdminUsername = "OgrenciNuramarasi@sakarya.edu.tr";
+            const string AdminUsername = "G221210093@ogr.sakarya.edu.tr";
             const string AdminPassword = "sau";
 
             if (username == AdminUsername && password == AdminPassword)

@@ -69,10 +69,21 @@
 </style>
 
 <div class="text-center">
-    <h1>Randevu Listesi</h1>
+    <h1>@(User.IsInRole("Admin") ? "Tüm Randevular" : "Randevularım")</h1>
+    @if (!User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary mb-3">Yeni Randevu Al</a>
+    }
 </div>
 
 <div class="randevu-container">
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            @(User.IsInRole("Admin") ? "Henüz randevu bulunmamaktadır." : "Henüz randevunuz bulunmamaktadır.")
+        </div>
+    }
+    
     @foreach (var randevu in Model)
     {
         <div class="randevu-card">
@@ -80,17 +91,20 @@
             <p><strong>Randevu Alan:</strong> @randevu.AdSoyad</p>
             <p><strong>İşlem:</strong> @randevu.Islem</p>
             <p><strong>Tarih & Saat:</strong> @randevu.TarihSaat.ToString("dd.MM.yyyy HH:mm")</p>
-            <p><strong>Onay Durumu:</strong> @randevu.OnayDurumu</p>
+            <p><strong>Onay Durumu:</strong> 
+                <span class="badge @(randevu.OnayDurumu == "Onaylandi" ? "bg-success" : "bg-warning")">
+                    @randevu.OnayDurumu
+                </span>
+            </p>
 
             @if (User.IsInRole("Admin"))
             {
                 <div class="btn-actions">
-                    <!-- Silme Butonu -->
-                    <form asp-action="Delete" asp-route-id="@randevu.ID" method="post" onsubmit="return confirm('Bu randevuyu silmek istediğinize emin misiniz?');">
+                    <form asp-action="Delete" asp-route-id="@randevu.ID" method="post" 
+                          onsubmit="return confirm('Bu randevuyu silmek istediğinize emin misiniz?');">
                         <button type="submit" class="btn btn-danger btn-sm">Sil</button>
                     </form>
 
-                    <!-- Onayla Butonu -->
                     @if (randevu.OnayDurumu != "Onaylandi")
                     {
                         <form asp-action="Onayla" asp-route-id="@randevu.ID" method="post">

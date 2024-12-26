@@ -24,15 +24,49 @@ namespace Web_Odev.Controllers
         }
 
         // GET: Randevus
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var randevular = await _context.Randevular
-                .Include(r => r.Calisan) // Çalışan bilgilerini de getiriyoruz
-                .ToListAsync();
-            return View(randevular);
-        }
+        // GET: Randevus
+[Authorize]
+[HttpGet]
+public async Task<IActionResult> Index()
+{
+    var userEmail = User.Identity.Name;
+    Console.WriteLine($"1. Kullanıcı Email: {userEmail}");
+
+    // Admin kontrolü
+    if (User.IsInRole("Admin"))
+    {
+        var adminRandevular = await _context.Randevular
+            .Include(r => r.Calisan)
+            .ToListAsync();
+        return View(adminRandevular);
+    }
+
+    // Kullanıcı bilgilerini al
+    var kullanici = await _context.Kullanicilar
+        .FirstOrDefaultAsync(k => k.Email == userEmail);
+
+    if (kullanici == null)
+    {
+        Console.WriteLine("Kullanıcı bulunamadı!");
+        return View(new List<Randevu>());
+    }
+
+    Console.WriteLine($"2. Kullanıcı bulundu: {kullanici.Isim}");
+
+    // Kullanıcının randevularını getir
+    var randevular = await _context.Randevular
+        .Include(r => r.Calisan)
+        .Where(r => r.AdSoyad == kullanici.Isim)
+        .ToListAsync();
+
+    Console.WriteLine($"3. Bulunan randevu sayısı: {randevular.Count}");
+    foreach (var r in randevular)
+    {
+        Console.WriteLine($"Randevu: {r.ID} - {r.AdSoyad} - {r.Islem} - {r.TarihSaat}");
+    }
+
+    return View(randevular);
+}
 
 
 
@@ -74,6 +108,25 @@ namespace Web_Odev.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Randevu randevu, string SelectedUzmanlik, IFormFile PhotoFile)
         {
+            var userEmail = User.Identity.Name;
+            Console.WriteLine($"1. Create - Kullanıcı Email: {userEmail}");
+
+            var kullanici = await _context.Kullanicilar
+                .FirstOrDefaultAsync(k => k.Email == userEmail);
+
+            if (kullanici == null)
+            {
+                Console.WriteLine("2. Create - Kullanıcı bulunamadı!");
+                ModelState.AddModelError("", "Kullanıcı bilgileri bulunamadı.");
+                return View(randevu);
+            }
+
+            Console.WriteLine($"3. Create - Kullanıcı bulundu: {kullanici.Isim}");
+
+            // Kullanıcı ismini otomatik set et
+            randevu.AdSoyad = kullanici.Isim;
+            Console.WriteLine($"4. Create - Randevu AdSoyad set edildi: {randevu.AdSoyad}");
+
             // ÇALIŞAN & UZMANLIK KONTROLLERİ
             var calisan = await _context.Calisanlar.FindAsync(randevu.CalisanId);
             if (calisan == null)
@@ -122,6 +175,7 @@ namespace Web_Odev.Controllers
             randevu.Islem = SelectedUzmanlik;
             _context.Randevular.Add(randevu);
             await _context.SaveChangesAsync();
+            Console.WriteLine("5. Create - Randevu kaydedildi");
 
             // FOTOĞRAF İŞLEMLERİ
             if (PhotoFile != null && PhotoFile.Length > 0)
@@ -348,7 +402,7 @@ namespace Web_Odev.Controllers
                 dynamic values = JsonConvert.DeserializeObject(body);
                 string base64Image = values.data.image;
 
-                // 3) Base64’i JSON olarak dön
+                // 3) Base64'i JSON olarak dön
                 return Json(new { base64Image });
             }
             catch (Exception ex)

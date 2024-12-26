@@ -74,19 +74,20 @@
     <h1>Berber Salonumuza Hoşgeldiniz!</h1>
 
     @if (User.IsInRole("Admin"))
-    {
-        <a href="/Admin/Dashboard" class="btn-custom btn-danger-custom">Admin Paneli</a>
-        <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
-            <button type="submit" class="btn-custom btn-dark-custom">Çıkış Yap</button>
-        </form>
-    }
-    else if (User.Identity.IsAuthenticated)
-    {
-        <a href="/Randevus/Create" class="btn-custom btn-success-custom">Randevu Al</a>
-        <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
-            <button type="submit" class="btn-custom btn-dark-custom">Çıkış Yap</button>
-        </form>
-    }
+{
+    <a href="/Admin/Dashboard" class="btn-custom btn-danger-custom">Admin Paneli</a>
+    <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
+        <button type="submit" class="btn-custom btn-dark-custom">Çıkış Yap</button>
+    </form>
+}
+else if (User.Identity.IsAuthenticated)
+{
+    <a href="/Randevus/Create" class="btn-custom btn-success-custom">Randevu Al</a>
+    <a href="/Randevus/Index" class="btn-custom btn-primary-custom">Randevularım</a>
+    <form asp-action="Logout" asp-controller="Account" method="post" style="display:inline;">
+        <button type="submit" class="btn-custom btn-dark-custom">Çıkış Yap</button>
+    </form>
+}
     else
     {
         <a href="/Admin/Login" class="btn-custom btn-primary-custom">Admin Girişi</a>
