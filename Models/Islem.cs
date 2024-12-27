@@ -18,5 +18,4 @@ namespace Web_Odev.Models
         [Display(Name = "Ücret")]
         public decimal? Ucret { get; set; } // Ücret (örneğin: 100.50)
     }
-
 }

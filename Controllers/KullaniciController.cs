@@ -66,7 +66,6 @@ namespace Web_Odev.Controllers
             return View(calisan);
         }
 
-
         // GET: Kullanicis/Create
         public IActionResult Create()
         {
@@ -148,8 +147,7 @@ namespace Web_Odev.Controllers
                 return NotFound();
             }
 
-            var kullanici = await _context.Kullanicilar
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var kullanici = await _context.Kullanicilar.FirstOrDefaultAsync(m => m.ID == id);
             if (kullanici == null)
             {
                 return NotFound();
@@ -200,8 +198,9 @@ namespace Web_Odev.Controllers
             }
 
             // Aynı email kontrolü
-            var existingUser = await _context.Kullanicilar
-                .FirstOrDefaultAsync(u => u.Email == kullanici.Email);
+            var existingUser = await _context.Kullanicilar.FirstOrDefaultAsync(u =>
+                u.Email == kullanici.Email
+            );
 
             if (existingUser != null)
             {
@@ -220,6 +219,5 @@ namespace Web_Odev.Controllers
 
             return RedirectToAction("Login", "Account");
         }
-
     }
 }
