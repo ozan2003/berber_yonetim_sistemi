@@ -82,6 +82,13 @@
             <span asp-validation-for="MusaitlikSaatleri" class="text-danger"></span>
         </div>
 
+        <!-- Uzmanlık Fiyatları -->
+        <div class="form-group">
+            <label asp-for="UzmanlikFiyatlari">Uzmanlık Fiyatları</label>
+            <input asp-for="UzmanlikFiyatlari" class="form-control" placeholder="Örn: 100, 200" />
+            <span asp-validation-for="UzmanlikFiyatlari" class="text-danger"></span>
+        </div>
+
         <!-- Kaydet Butonu -->
         <button type="submit" class="btn btn-custom">Kaydet</button>
     </form>

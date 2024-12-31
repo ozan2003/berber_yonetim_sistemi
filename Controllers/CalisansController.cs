@@ -109,7 +109,7 @@ namespace Web_Odev.Controllers
         // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Isim,UzmanlikAlanlari,UzmanlikSureleri,MusaitlikSaatleri")] Calisan calisan)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Isim,UzmanlikAlanlari,UzmanlikSureleri,MusaitlikSaatleri,UzmanlikFiyatlari")] Calisan calisan)
         {
             if (id != calisan.ID)
             {
@@ -120,23 +120,21 @@ namespace Web_Odev.Controllers
             {
                 try
                 {
-                    // Veritabanından mevcut çalışanı al
                     var existingCalisan = await _context.Calisanlar.FindAsync(id);
-
                     if (existingCalisan == null)
                     {
                         return NotFound();
                     }
 
-                    // Varolan çalışanın özelliklerini güncelle
                     existingCalisan.Isim = calisan.Isim;
                     existingCalisan.UzmanlikAlanlari = calisan.UzmanlikAlanlari;
                     existingCalisan.UzmanlikSureleri = calisan.UzmanlikSureleri;
                     existingCalisan.MusaitlikSaatleri = calisan.MusaitlikSaatleri;
+                    existingCalisan.UzmanlikFiyatlari = calisan.UzmanlikFiyatlari;
 
-                    // Veritabanına değişiklikleri kaydet
                     _context.Update(existingCalisan);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -149,10 +147,8 @@ namespace Web_Odev.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index)); // Liste sayfasına yönlendir
             }
-
-            return View(calisan); // Hata durumunda aynı sayfayı göster
+            return View(calisan);
         }
 
 

@@ -54,25 +54,35 @@
         <dt>Müsaitlik Saatleri</dt>
         <dd>@ViewBag.MusaitlikSaatleri</dd>
 
-        <dt>Uzmanlık Alanları ve Süreleri</dt>
+        <dt>Uzmanlık Alanları, Süreleri ve Fiyatları</dt>
         <dd>
             @{
                 var uzmanlikAlanlari = ViewBag.UzmanlikAlanlari as List<string>;
                 var uzmanlikSureleri = ViewBag.UzmanlikSureleri as List<string>;
+                var uzmanlikFiyatlari = !string.IsNullOrEmpty(Model.UzmanlikFiyatlari) 
+                    ? Model.UzmanlikFiyatlari.Split(',').Select(f => f.Trim()).ToList() 
+                    : new List<string>();
             }
 
-            @if (uzmanlikAlanlari != null && uzmanlikSureleri != null && uzmanlikAlanlari.Count == uzmanlikSureleri.Count)
+            @if (uzmanlikAlanlari != null && uzmanlikSureleri != null && 
+                 uzmanlikAlanlari.Count == uzmanlikSureleri.Count)
             {
                 <ul>
                     @for (int i = 0; i < uzmanlikAlanlari.Count; i++)
                     {
-                        <li>@uzmanlikAlanlari[i]: @uzmanlikSureleri[i] dakika</li>
+                        <li>
+                            @uzmanlikAlanlari[i]: @uzmanlikSureleri[i] dakika 
+                            @if (i < uzmanlikFiyatlari.Count)
+                            {
+                                <span>- @uzmanlikFiyatlari[i] TL</span>
+                            }
+                        </li>
                     }
                 </ul>
             }
             else
             {
-                <p>Uzmanlık alanı veya süre bilgisi bulunmuyor.</p>
+                <p>Uzmanlık alanı, süre veya fiyat bilgisi bulunmuyor.</p>
             }
         </dd>
     </dl>

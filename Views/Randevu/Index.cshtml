@@ -1,0 +1,185 @@
+@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Randevu Onaylama Sistemi";
+}
+
+<style>
+    .randevu-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin: 20px auto;
+    }
+
+    .randevu-card {
+        background: white;
+        border-left: 5px solid #4e73df;
+        margin-bottom: 20px;
+        padding: 15px;
+        transition: transform 0.2s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .randevu-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8em;
+        font-weight: bold;
+    }
+
+    .status-pending {
+        background-color: #ffeeba;
+        color: #856404;
+    }
+
+    .status-approved {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .alert {
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .btn-custom {
+        background: linear-gradient(to right, #4e73df, #224abe);
+        color: white;
+        border: none;
+        transition: all 0.3s;
+    }
+
+    .btn-custom:hover {
+        background: linear-gradient(to right, #224abe, #1a3a9c);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .stats-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        flex: 1;
+        margin: 0 10px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+</style>
+
+<div class="container">
+    <div class="randevu-container">
+        <h2 class="text-center mb-4">
+            <i class="fas fa-calendar-check"></i> 
+            Randevu Yönetim Paneli
+        </h2>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <h4>Bekleyen</h4>
+                <h3>@Model.Count()</h3>
+            </div>
+            <div class="stat-card">
+                <h4>Bugün</h4>
+                <h3>@Model.Count(r => r.TarihSaat.Date == DateTime.Today)</h3>
+            </div>
+            <div class="stat-card">
+                <h4>Toplam</h4>
+                <h3>@Model.Count()</h3>
+            </div>
+        </div>
+
+        @foreach (var randevu in Model)
+        {
+            <div class="randevu-card">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <h5 class="mb-0">@randevu.AdSoyad</h5>
+                        <small class="text-muted">Müşteri</small>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="mb-0">@randevu.Calisan</h5>
+                        <small class="text-muted">Personel</small>
+                    </div>
+                    <div class="col-md-2">
+                        <h5 class="mb-0">@randevu.Islem</h5>
+                        <small class="text-muted">İşlem</small>
+                    </div>
+                    <div class="col-md-2">
+                        <h5 class="mb-0">@randevu.TarihSaat.ToString("dd/MM/yyyy HH:mm")</h5>
+                        <small class="text-muted">Tarih & Saat</small>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <form asp-action="Onayla" asp-route-id="@randevu.ID" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-custom">
+                                <i class="fas fa-check"></i> Onayla
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="text-center p-5">
+                <h4 class="text-muted">
+                    <i class="fas fa-calendar-times"></i>
+                    Onay Bekleyen Randevu Bulunmamaktadır
+                </h4>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Onaylama işlemi için konfirmasyon
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                
+                Swal.fire({
+                    title: 'Randevuyu onaylamak istediğinize emin misiniz?',
+                    text: "Bu işlem geri alınamaz!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Evet, onayla!',
+                    cancelButtonText: 'İptal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.off('submit').submit();
+                    }
+                });
+            });
+        });
+    </script>
+} 

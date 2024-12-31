@@ -109,23 +109,15 @@ public async Task<IActionResult> Index()
         public async Task<IActionResult> Create(Randevu randevu, string SelectedUzmanlik, IFormFile PhotoFile)
         {
             var userEmail = User.Identity.Name;
-            Console.WriteLine($"1. Create - Kullanıcı Email: {userEmail}");
-
-            var kullanici = await _context.Kullanicilar
-                .FirstOrDefaultAsync(k => k.Email == userEmail);
+            var kullanici = await _context.Kullanicilar.FirstOrDefaultAsync(k => k.Email == userEmail);
 
             if (kullanici == null)
             {
-                Console.WriteLine("2. Create - Kullanıcı bulunamadı!");
                 ModelState.AddModelError("", "Kullanıcı bilgileri bulunamadı.");
                 return View(randevu);
             }
 
-            Console.WriteLine($"3. Create - Kullanıcı bulundu: {kullanici.Isim}");
-
-            // Kullanıcı ismini otomatik set et
             randevu.AdSoyad = kullanici.Isim;
-            Console.WriteLine($"4. Create - Randevu AdSoyad set edildi: {randevu.AdSoyad}");
 
             // ÇALIŞAN & UZMANLIK KONTROLLERİ
             var calisan = await _context.Calisanlar.FindAsync(randevu.CalisanId);
@@ -135,6 +127,40 @@ public async Task<IActionResult> Index()
                 return View(randevu);
             }
 
+            // Müsaitlik saatleri kontrolü
+            var musaitlikSaatleri = calisan.MusaitlikSaatleri?.Split(',')
+                .Select(s => s.Trim())
+                .ToList() ?? new List<string>();
+
+            bool saatUygun = false;
+            foreach (var musaitlikAraligi in musaitlikSaatleri)
+            {
+                var saatler = musaitlikAraligi.Split('-');
+                if (saatler.Length == 2)
+                {
+                    if (DateTime.TryParse(saatler[0], out DateTime baslangic) && 
+                        DateTime.TryParse(saatler[1], out DateTime bitis))
+                    {
+                        var randevuSaati = randevu.TarihSaat.TimeOfDay;
+                        var musaitlikBaslangic = baslangic.TimeOfDay;
+                        var musaitlikBitis = bitis.TimeOfDay;
+
+                        if (randevuSaati >= musaitlikBaslangic && randevuSaati <= musaitlikBitis)
+                        {
+                            saatUygun = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!saatUygun)
+            {
+                ModelState.AddModelError("TarihSaat", "Seçilen saat çalışanın müsait olduğu saatler arasında değil.");
+                return View(randevu);
+            }
+
+            // Diğer kontroller
             var uzmanlikAlanlari = calisan.UzmanlikAlanlari?.Split(',')
                 .Select(x => x.Trim()).ToList() ?? new List<string>();
             var uzmanlikSureleri = calisan.UzmanlikSureleri?.Split(',')
@@ -341,11 +367,19 @@ public async Task<IActionResult> Index()
             var calisan = _context.Calisanlar.Find(calisanId);
             if (calisan == null || string.IsNullOrEmpty(calisan.UzmanlikAlanlari))
             {
-                return Json(new List<string>());
+                return Json(new List<object>());
             }
 
             var uzmanlikAlanlari = calisan.UzmanlikAlanlari.Split(',').Select(u => u.Trim()).ToList();
-            return Json(uzmanlikAlanlari);
+            var uzmanlikFiyatlari = calisan.UzmanlikFiyatlari?.Split(',').Select(f => f.Trim()).ToList() ?? new List<string>();
+
+            var result = uzmanlikAlanlari.Select((alan, index) => new
+            {
+                alan = alan,
+                fiyat = index < uzmanlikFiyatlari.Count ? uzmanlikFiyatlari[index] : "0"
+            }).ToList();
+
+            return Json(result);
         }
 
         [HttpPost]
