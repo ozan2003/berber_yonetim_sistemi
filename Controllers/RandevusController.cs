@@ -226,7 +226,7 @@ public async Task<IActionResult> Index()
                     using var request = new HttpRequestMessage(HttpMethod.Post,
                         "https://hairstyle-changer.p.rapidapi.com/huoshan/facebody/hairstyle");
 
-                    request.Headers.Add("X-RapidAPI-Key", "4153a9853cmsh529d90af3366380p151f08jsn156dcfd4c127");
+                    request.Headers.Add("X-RapidAPI-Key", null);
                     request.Headers.Add("X-RapidAPI-Host", "hairstyle-changer.p.rapidapi.com");
 
                     // Create multipart form content
@@ -409,7 +409,7 @@ public async Task<IActionResult> Index()
                 using var request = new HttpRequestMessage(HttpMethod.Post,
                     "https://hairstyle-changer.p.rapidapi.com/huoshan/facebody/hairstyle");
 
-                request.Headers.Add("X-RapidAPI-Key", "4153a9853cmsh529d90af3366380p151f08jsn156dcfd4c127");
+                request.Headers.Add("X-RapidAPI-Key", null);
                 request.Headers.Add("X-RapidAPI-Host", "hairstyle-changer.p.rapidapi.com");
 
                 var multipartContent = new MultipartFormDataContent();
